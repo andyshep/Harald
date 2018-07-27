@@ -13,10 +13,12 @@ import RxCocoa
 
 class PeripheralsViewController: NSViewController {
     
+    public let reloadEvent = PublishSubject<Void>()
+    
     @IBOutlet private weak var tableView: NSTableView!
     @IBOutlet private weak var statusTextField: NSTextField!
     
-    @objc private var peripherals: [CBPeripheral] = []
+    @objc private var discovered: [DiscoveredPeripheral] = []
     
     private let bag = DisposeBag()
     
@@ -29,7 +31,7 @@ class PeripheralsViewController: NSViewController {
     
     lazy var peripheralsController: NSArrayController = {
         let controller = NSArrayController()
-        controller.bind(.contentArray, to: self, withKeyPath: "peripherals")
+        controller.bind(.contentArray, to: self, withKeyPath: "discovered")
         
         return controller
     }()
@@ -41,18 +43,36 @@ class PeripheralsViewController: NSViewController {
         tableView.bind(.selectionIndexes, to: peripheralsController, withKeyPath: "selectionIndexes")
         
         bind(to: peripheralsController)
+        
+        reloadEvent
+            .subscribe { [weak self] _ in
+                guard let this = self else { return }
+                
+                this.closeActiveConnections()
+                this.manager?.stopScan()
+                
+                this.willChangeValue(for: \.discovered)
+                this.discovered = []
+                this.didChangeValue(for: \.discovered)
+                
+                this.manager?.scanForPeripherals(withServices: nil)
+            }
+            .disposed(by: bag)
     }
 }
 
 extension PeripheralsViewController {
     func bind(to manager: CBCentralManager) {
         manager.rx.discoveredPeripheral
-            .subscribe(onNext: { [weak self] (peripheral) in
+            .map { DiscoveredPeripheral(discovery: $0) }
+            .subscribe(onNext: { [weak self] (discovery) in
                 guard let this = self else { return }
-                if !this.peripherals.contains(peripheral) {
-                    this.willChangeValue(for: \.peripherals)
-                    this.peripherals.append(peripheral)
-                    this.didChangeValue(for: \.peripherals)
+//                guard let _ = peripheral.name else { return }
+                
+                if !this.discovered.contains(discovery) {
+                    this.willChangeValue(for: \.discovered)
+                    this.discovered.append(discovery)
+                    this.didChangeValue(for: \.discovered)
                 }
             })
             .disposed(by: bag)
@@ -76,20 +96,35 @@ extension PeripheralsViewController {
                 guard let objects = controller.arrangedObjects as? [AnyObject] else { return 0 }
                 return objects.count
             }
-            .map { count -> String in
-                switch count {
-                case 0:
-                    return "No peripherals discovered"
-                case 1:
-                    return "1 peripheral discovered"
-                default:
-                    return "\(count) peripherals discovered"
-                }
-            }
+            .map { discoveryDescriptor(with: $0) }
             .asDriver(onErrorJustReturn: "No peripherals discovered")
             .drive(onNext: { [weak self] (result) in
                 self?.statusTextField.stringValue = result
             })
             .disposed(by: bag)
+    }
+}
+
+extension PeripheralsViewController {
+    private func closeActiveConnections() {
+        guard let discovered = peripheralsController.selectedObjects.first as? DiscoveredPeripheral else { return }
+        manager?.cancelPeripheralConnection(discovered.peripheral)
+    }
+}
+
+private extension CBPeripheral {
+    @objc var displayName: String {
+        return self.name ?? "Unknown"
+    }
+}
+
+private func discoveryDescriptor(with count: Int) -> String {
+    switch count {
+    case 0:
+        return "No peripherals discovered"
+    case 1:
+        return "1 peripheral discovered"
+    default:
+        return "\(count) peripherals discovered"
     }
 }

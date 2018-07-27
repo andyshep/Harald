@@ -17,12 +17,14 @@ import RxCocoa
 @objc class ServiceNode: DataNode {
     @objc let name: String
     @objc let value: String = ""
+    @objc var characteristics: [CharacteristicNode]
     
     let service: CBService
     
-    init(service: CBService) {
+    init(service: CBService, characteristics: [CharacteristicNode] = []) {
         self.service = service
         self.name = service.uuid.description
+        self.characteristics = characteristics
         super.init()
     }
     
@@ -30,11 +32,9 @@ import RxCocoa
         return false
     }
     
-    @objc var characteristics: [CharacteristicNode] = []
-    
     override func isEqual(_ object: Any?) -> Bool {
         guard let node = object as? ServiceNode else { return false }
-        return node.service.isEqual(to: self)
+        return node.service.isEqual(to: self.service)
     }
 }
 
@@ -46,7 +46,7 @@ import RxCocoa
         return _value ?? ""
     }
     
-    let characteristic: CBCharacteristic
+    @objc let characteristic: CBCharacteristic
     
     private let bag = DisposeBag()
     
@@ -64,7 +64,7 @@ import RxCocoa
     
     override func isEqual(_ object: Any?) -> Bool {
         guard let node = object as? CharacteristicNode else { return false }
-        return node.characteristic.isEqual(to: self)
+        return node.characteristic.isEqual(to: self.characteristic)
     }
     
     private func bind(to characteristic: CBCharacteristic) {
@@ -86,5 +86,22 @@ import RxCocoa
                 self?.didChangeValue(for: \.value)
             })
             .disposed(by: bag)
+    }
+}
+
+@objc class PacketNode: DataNode {
+    @objc let name: String
+    @objc let value: String
+    @objc let children: [PacketNode]
+    
+    init(name: String, value: String) {
+        self.name = name
+        self.value = value
+        self.children = []
+        super.init()
+    }
+    
+    @objc var isLeaf: Bool {
+        return children.count == 0
     }
 }

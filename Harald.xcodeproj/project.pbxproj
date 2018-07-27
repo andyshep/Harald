@@ -17,6 +17,7 @@
 		F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79FAEB520FAC6A20066089F /* DetailViewController.swift */; };
 		F7B0251820FA0CCC0030FF96 /* ObservableType+FilterNils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0251720FA0CCC0030FF96 /* ObservableType+FilterNils.swift */; };
 		F7B2AB4B20FC0C8E00A8EDD1 /* Data+HexEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */; };
+		F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BB97BC21035CCD00C0CBB3 /* DiscoveredPeripheral.swift */; };
 		F7CD04272041BF0A00DDDCB3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CD04262041BF0A00DDDCB3 /* AppDelegate.swift */; };
 		F7CD042B2041BF0A00DDDCB3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7CD042A2041BF0A00DDDCB3 /* Assets.xcassets */; };
 		F7CD042E2041BF0A00DDDCB3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7CD042C2041BF0A00DDDCB3 /* Main.storyboard */; };
@@ -69,6 +70,7 @@
 		F79FAEB520FAC6A20066089F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		F7B0251720FA0CCC0030FF96 /* ObservableType+FilterNils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableType+FilterNils.swift"; sourceTree = "<group>"; };
 		F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+HexEncoding.swift"; sourceTree = "<group>"; };
+		F7BB97BC21035CCD00C0CBB3 /* DiscoveredPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredPeripheral.swift; sourceTree = "<group>"; };
 		F7CD04232041BF0A00DDDCB3 /* Harald.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harald.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7CD04262041BF0A00DDDCB3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F7CD042A2041BF0A00DDDCB3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -98,6 +100,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F7BB97BB21035CB200C0CBB3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F76CD27020900D7D006C2A36 /* ServiceNode.swift */,
+				F7BB97BC21035CCD00C0CBB3 /* DiscoveredPeripheral.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		F7CD041A2041BF0A00DDDCB3 = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +132,7 @@
 		F7CD04252041BF0A00DDDCB3 /* Harald */ = {
 			isa = PBXGroup;
 			children = (
+				F7BB97BB21035CB200C0CBB3 /* Model */,
 				F7CD04262041BF0A00DDDCB3 /* AppDelegate.swift */,
 				F7CD04B42043068600DDDCB3 /* WindowController.swift */,
 				F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */,
@@ -130,7 +142,6 @@
 				F7F93AA1208CC764006E7166 /* CBCentralManager+Rx.swift */,
 				F7F93AA5208D0CA0006E7166 /* RxPeripheralDelegateProxy.swift */,
 				F7F93AA3208D0C48006E7166 /* CBPeripheral+Rx.swift */,
-				F76CD27020900D7D006C2A36 /* ServiceNode.swift */,
 				F72E8E6B20960E130007207E /* RxOutlineViewDelegateProxy.swift */,
 				F72E8E6920960D530007207E /* NSOutlineView+Rx.swift */,
 				F7B0251720FA0CCC0030FF96 /* ObservableType+FilterNils.swift */,
@@ -233,6 +244,7 @@
 				F7F93AA2208CC764006E7166 /* CBCentralManager+Rx.swift in Sources */,
 				F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */,
 				F71D18AD2083EDF00047DD97 /* ObservableType+Equatable.swift in Sources */,
+				F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */,
 				F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */,
 				F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */,
 				F7CD04272041BF0A00DDDCB3 /* AppDelegate.swift in Sources */,

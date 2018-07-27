@@ -11,18 +11,23 @@ import CoreBluetooth
 import RxSwift
 import RxCocoa
 
+typealias AdvertisementPacket = [String: Any]
+typealias Discovery = (peripheral: CBPeripheral, packet: AdvertisementPacket, rssi: NSNumber)
+
 extension Reactive where Base: CBCentralManager {
     
-    var discoveredPeripheral: Observable<CBPeripheral> {
+    var discoveredPeripheral: Observable<Discovery> {
         let selector = #selector(
             CBCentralManagerDelegate.centralManager(_:didDiscover:advertisementData:rssi:)
         )
         
         return RxCBCentralManagerDelegateProxy.proxy(for: base)
             .methodInvoked(selector)
-            .map { params -> CBPeripheral in
-                let service = params[1] as! CBPeripheral
-                return service
+            .map { params -> Discovery in
+                let peripheral = params[1] as! CBPeripheral
+                let packet = params[2] as! [String: Any]
+                let rssi = params[3] as! NSNumber
+                return (peripheral: peripheral, packet: packet, rssi: rssi)
         }
     }
     
