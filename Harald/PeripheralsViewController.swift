@@ -45,7 +45,8 @@ class PeripheralsViewController: NSViewController {
         bind(to: peripheralsController)
         
         reloadEvent
-            .subscribe { [weak self] _ in
+            .asDriver(onErrorDriveWith: Driver.never())
+            .drive(onNext: { [weak self] _ in
                 guard let this = self else { return }
                 
                 this.closeActiveConnections()
@@ -56,7 +57,7 @@ class PeripheralsViewController: NSViewController {
                 this.didChangeValue(for: \.discovered)
                 
                 this.manager?.scanForPeripherals(withServices: nil)
-            }
+            })
             .disposed(by: bag)
     }
 }
@@ -67,7 +68,7 @@ extension PeripheralsViewController {
             .map { DiscoveredPeripheral(discovery: $0) }
             .subscribe(onNext: { [weak self] (discovery) in
                 guard let this = self else { return }
-//                guard let _ = peripheral.name else { return }
+                guard let _ = discovery.peripheral.name else { return }
                 
                 if !this.discovered.contains(discovery) {
                     this.willChangeValue(for: \.discovered)
@@ -80,10 +81,26 @@ extension PeripheralsViewController {
         manager.rx.state
             .startWith(CBManagerState.unknown)
             .filter { $0 == .poweredOn }
+            // once the manager is powered on, begin periodic scanning
             .take(1)
-            .subscribe(onNext: { [weak self] (state) in
+            // start a 15 second period timer
+            .flatMapLatest { _ -> Observable<Int> in
+                return Observable<Int>.timer(0, period: 15, scheduler: MainScheduler.instance)
+            }
+            // begin scanning whenever to timer fires
+            .do(onNext: { [weak self] (_) in
                 self?.manager?.scanForPeripherals(withServices: nil)
             })
+            // each time we start scanning, start another one-time 10 second timer
+            .flatMapLatest({ _ -> Observable<Int> in
+                return Observable<Int>.timer(10, scheduler: MainScheduler.instance)
+            })
+            // stop scanning once to second timer fires
+            .do(onNext: { [weak self] (_) in
+                self?.manager?.stopScan()
+            })
+            // subscribe (and repeat)
+            .subscribe()
             .disposed(by: bag)
     }
     
@@ -114,7 +131,11 @@ extension PeripheralsViewController {
 
 private extension CBPeripheral {
     @objc var displayName: String {
-        return self.name ?? "Unknown"
+        guard let name = self.name else {
+            return "Unknown"
+        }
+        
+        return name.trimmingLowEnergyPrefix
     }
 }
 
@@ -126,5 +147,15 @@ private func discoveryDescriptor(with count: Int) -> String {
         return "1 peripheral discovered"
     default:
         return "\(count) peripherals discovered"
+    }
+}
+
+private extension String {
+    var trimmingLowEnergyPrefix: String {
+        if self.prefix(3) == "LE-" {
+            return String(self.dropFirst(3))
+        } else {
+            return self
+        }
     }
 }
