@@ -59,14 +59,12 @@ class ServicesViewController: NSViewController {
             .disposed(by: bag)
         
         reloadEvent
-            .debug()
             .subscribe { [weak self] _ in
                 self?.representedObject = nil
             }
             .disposed(by: bag)
         
         exportEvent
-            .debug()
             .subscribe { _ in
                 print("export: \(self.services)")
             }
@@ -146,7 +144,6 @@ private extension ServicesViewController {
             }
             // update the service nodes with the characterics once discovered
             .map { [weak self] (service, characterics) in
-                
                 guard let this = self else { return }
                 
                 // initiate a call to read each charactertistics value
@@ -154,7 +151,6 @@ private extension ServicesViewController {
                 characterics.forEach { peripheral.readValue(for: $0) }
                 
                 this.updateCharacteristics(characterics, for: service)
-                
                 this.outlineView.expandItem(nil, expandChildren: true)
             }
             .subscribe()
