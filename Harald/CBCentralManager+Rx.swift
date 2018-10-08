@@ -16,6 +16,10 @@ typealias Discovery = (peripheral: CBPeripheral, packet: AdvertisementPacket, rs
 
 extension Reactive where Base: CBCentralManager {
     
+    private enum CBCentralManagerRxError: Error {
+        case signatureMismatch
+    }
+    
     var discoveredPeripheral: Observable<Discovery> {
         let selector = #selector(
             CBCentralManagerDelegate.centralManager(_:didDiscover:advertisementData:rssi:)
@@ -24,11 +28,19 @@ extension Reactive where Base: CBCentralManager {
         return RxCBCentralManagerDelegateProxy.proxy(for: base)
             .methodInvoked(selector)
             .map { params -> Discovery in
-                let peripheral = params[1] as! CBPeripheral
-                let packet = params[2] as! [String: Any]
-                let rssi = params[3] as! NSNumber
+                guard
+                    let peripheral = params[1] as? CBPeripheral,
+                    let packet = params[2] as? [String: Any],
+                    let rssi = params[3] as? NSNumber
+                else {
+                    throw CBCentralManagerRxError.signatureMismatch
+                }
+                
                 return (peripheral: peripheral, packet: packet, rssi: rssi)
-        }
+            }
+            .catchError { error -> Observable<Discovery> in
+                return Observable.error(error)
+            }
     }
     
     var state: Observable<CBManagerState> {
@@ -45,10 +57,12 @@ extension Reactive where Base: CBCentralManager {
         return RxCBCentralManagerDelegateProxy.proxy(for: base)
             .methodInvoked(selector)
             .map { params -> Error in
-                let error = params[2] as! Error
+                guard let error = params[2] as? Error else {
+                    return CBCentralManagerRxError.signatureMismatch
+                }
+                
                 return error
             }
-        
     }
     
     func connect(to peripheral: CBPeripheral) -> Single<CBPeripheral> {
@@ -59,12 +73,18 @@ extension Reactive where Base: CBCentralManager {
         let result = RxCBCentralManagerDelegateProxy.proxy(for: base)
             .methodInvoked(selector)
             .map { (params) -> CBPeripheral in
-                let connected = params[1] as! CBPeripheral
+                guard let connected = params[1] as? CBPeripheral else {
+                    throw CBCentralManagerRxError.signatureMismatch
+                }
+                
                 return connected
             }
             .filter { $0 == peripheral }
             .take(1)
             .asSingle()
+            .catchError { (error) -> Single<CBPeripheral> in
+                return Single.error(error)
+            }
         
         self.base.connect(peripheral, options: [:])
         
@@ -79,12 +99,18 @@ extension Reactive where Base: CBCentralManager {
         let result = RxCBCentralManagerDelegateProxy.proxy(for: base)
             .methodInvoked(selector)
             .map { (params) -> CBPeripheral in
-                let disconnected = params[1] as! CBPeripheral
+                guard let disconnected = params[1] as? CBPeripheral else {
+                    throw CBCentralManagerRxError.signatureMismatch
+                }
+                
                 return disconnected
             }
             .filter { $0 == peripheral }
             .take(1)
             .asObservable()
+            .catchError { (error) -> Observable<CBPeripheral> in
+                return Observable.error(error)
+            }
         
         self.base.cancelPeripheralConnection(peripheral)
         
