@@ -22,7 +22,7 @@ extension Reactive where Base: CBPeripheral {
         return proxy
             .discoveredServicesSubject
             .asObservable()
-            .share(replay: 1, scope: .whileConnected)
+//            .share(replay: 1, scope: .whileConnected)
     }
 }
 
@@ -33,7 +33,7 @@ extension Reactive where Base: CBService {
         return proxy
             .discoveredCharacteristicsSubject
             .asObservable()
-            .share(replay: 1, scope: .whileConnected)
+//            .share(replay: 1, scope: .whileConnected)
     }
 }
 
@@ -43,7 +43,7 @@ extension Reactive where Base: CBCharacteristic {
         return proxy
             .discoveredCharacteristicDescriptorsSubject
             .asObservable()
-            .share(replay: 1, scope: .whileConnected)
+//            .share(replay: 1, scope: .whileConnected)
     }
     
     var value: Single<Data?> {
@@ -54,9 +54,9 @@ extension Reactive where Base: CBCharacteristic {
             .filter { characteristic -> Bool in
                 self.base.uuid == characteristic.uuid
             }
-            .flatMapLatest { (characteristic) -> Observable<Data?> in
+            .map { (characteristic) -> Data? in
                 let value = characteristic.value
-                return Observable.just(value)
+                return value
             }
             .take(1)
             .asSingle()
