@@ -66,7 +66,8 @@ extension PeripheralsViewController {
     func bind(to manager: CBCentralManager) {
         manager.rx.discoveredPeripheral
             .map { DiscoveredPeripheral(discovery: $0) }
-            .subscribe(onNext: { [weak self] (discovery) in
+            .asDriver(onErrorDriveWith: Driver.never())
+            .drive(onNext: { [weak self] (discovery) in
                 guard let this = self else { return }
                 guard let _ = discovery.peripheral.name else { return }
                 

@@ -36,7 +36,6 @@ class DetailViewController: NSViewController {
         self.rx
             .observe([String: Any].self, "representedObject")
             .filterNils()
-            .catchErrorJustReturn([:])
             .map { (packet) -> [Advertisement] in
                 return packet
                     .enumerated()
@@ -47,7 +46,8 @@ class DetailViewController: NSViewController {
             .map { (advertisements) -> [PacketNode] in
                 return advertisements.map { PacketNode(name: $0.name, value: $0.value) }
             }
-            .subscribe(onNext: { [weak self] packets in
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { [weak self] packets in
                 self?.willChangeValue(for: \.packets)
                 self?.packets = packets
                 self?.didChangeValue(for: \.packets)
