@@ -128,6 +128,7 @@ private extension ServicesViewController {
     }
     
     private func bind(to peripheral: CBPeripheral) {
+        
         manager?.rx.connect(to: peripheral)
             .asObservable()
             .flatMapLatest { $0.rx.discoveredServices }
