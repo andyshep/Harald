@@ -86,7 +86,7 @@ extension PeripheralsViewController {
             .take(1)
             // start a 15 second period timer
             .flatMapLatest { _ -> Observable<Int> in
-                return Observable<Int>.timer(0, period: 15, scheduler: MainScheduler.instance)
+                return Observable<Int>.timer(.seconds(0), period: .seconds(15), scheduler: MainScheduler.instance)
             }
             // begin scanning whenever to timer fires
             .do(onNext: { [weak self] (_) in
@@ -94,7 +94,7 @@ extension PeripheralsViewController {
             })
             // each time we start scanning, start another one-time 10 second timer
             .flatMapLatest({ _ -> Observable<Int> in
-                return Observable<Int>.timer(10, scheduler: MainScheduler.instance)
+                return Observable<Int>.timer(.seconds(10), scheduler: MainScheduler.instance)
             })
             // stop scanning once to second timer fires
             .do(onNext: { [weak self] (_) in

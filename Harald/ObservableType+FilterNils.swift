@@ -22,17 +22,17 @@ extension Optional: OptionalType {
     }
 }
 
-public extension ObservableType where E: OptionalType {
+public extension ObservableType where Element: OptionalType {
     
     /// Filter nil values from the Observable stream
     ///
     /// - Returns: A filtered stream with nil values removed
-    func filterNils() -> Observable<E.Wrapped> {
-        return self.flatMap { element -> Observable<E.Wrapped> in
+    func filterNils() -> Observable<Element.Wrapped> {
+        return self.flatMap { element -> Observable<Element.Wrapped> in
             guard let value = element.value else {
-                return Observable<E.Wrapped>.empty()
+                return Observable<Element.Wrapped>.empty()
             }
-            return Observable<E.Wrapped>.just(value)
+            return Observable<Element.Wrapped>.just(value)
         }
     }
 }

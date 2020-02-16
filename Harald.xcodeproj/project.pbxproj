@@ -8,10 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */; };
-		F71D18AD2083EDF00047DD97 /* ObservableType+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D18AC2083EDF00047DD97 /* ObservableType+Equatable.swift */; };
 		F72B0ADD208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72B0ADC208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift */; };
 		F72E8E6A20960D530007207E /* NSOutlineView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72E8E6920960D530007207E /* NSOutlineView+Rx.swift */; };
 		F72E8E6C20960E130007207E /* RxOutlineViewDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72E8E6B20960E130007207E /* RxOutlineViewDelegateProxy.swift */; };
+		F73B3FC123F8B53900583D8F /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A95208C9FF4006E7166 /* RxCocoa.framework */; };
+		F73B3FC223F8B53900583D8F /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A95208C9FF4006E7166 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F73B3FC323F8B53900583D8F /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A94208C9FF4006E7166 /* RxSwift.framework */; };
+		F73B3FC423F8B53900583D8F /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A94208C9FF4006E7166 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F73B3FC923F8B55F00583D8F /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC623F8B55F00583D8F /* RxRelay.framework */; };
+		F73B3FCA23F8B55F00583D8F /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC623F8B55F00583D8F /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F73B3FCB23F8B55F00583D8F /* RxAtomic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC723F8B55F00583D8F /* RxAtomic.framework */; };
+		F73B3FCC23F8B55F00583D8F /* RxAtomic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC723F8B55F00583D8F /* RxAtomic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F73B3FCD23F8B55F00583D8F /* RxBlocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC823F8B55F00583D8F /* RxBlocking.framework */; };
+		F73B3FCE23F8B55F00583D8F /* RxBlocking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC823F8B55F00583D8F /* RxBlocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F76CD27120900D7D006C2A36 /* ServiceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD27020900D7D006C2A36 /* ServiceNode.swift */; };
 		F76CD273209010BB006C2A36 /* ServicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD272209010BA006C2A36 /* ServicesViewController.swift */; };
 		F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79FAEB520FAC6A20066089F /* DetailViewController.swift */; };
@@ -22,10 +31,6 @@
 		F7CD042B2041BF0A00DDDCB3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7CD042A2041BF0A00DDDCB3 /* Assets.xcassets */; };
 		F7CD042E2041BF0A00DDDCB3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7CD042C2041BF0A00DDDCB3 /* Main.storyboard */; };
 		F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CD04B42043068600DDDCB3 /* WindowController.swift */; };
-		F7F93A96208C9FF4006E7166 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A94208C9FF4006E7166 /* RxSwift.framework */; };
-		F7F93A97208C9FF4006E7166 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A94208C9FF4006E7166 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F7F93A98208C9FF4006E7166 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A95208C9FF4006E7166 /* RxCocoa.framework */; };
-		F7F93A99208C9FF4006E7166 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A95208C9FF4006E7166 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F7F93A9D208CA009006E7166 /* RxSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = F7F93A9B208CA009006E7166 /* RxSwift.framework.dSYM */; };
 		F7F93A9E208CA009006E7166 /* RxCocoa.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = F7F93A9C208CA009006E7166 /* RxCocoa.framework.dSYM */; };
 		F7F93AA2208CC764006E7166 /* CBCentralManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F93AA1208CC764006E7166 /* CBCentralManager+Rx.swift */; };
@@ -34,6 +39,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		F73B3FC523F8B53900583D8F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F73B3FC423F8B53900583D8F /* RxSwift.framework in Embed Frameworks */,
+				F73B3FCE23F8B55F00583D8F /* RxBlocking.framework in Embed Frameworks */,
+				F73B3FCC23F8B55F00583D8F /* RxAtomic.framework in Embed Frameworks */,
+				F73B3FC223F8B53900583D8F /* RxCocoa.framework in Embed Frameworks */,
+				F73B3FCA23F8B55F00583D8F /* RxRelay.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F7F93A8F208C9F56006E7166 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -45,26 +65,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F7F93A9A208C9FF4006E7166 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				F7F93A99208C9FF4006E7166 /* RxCocoa.framework in Embed Frameworks */,
-				F7F93A97208C9FF4006E7166 /* RxSwift.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralsViewController.swift; sourceTree = "<group>"; };
-		F71D18AC2083EDF00047DD97 /* ObservableType+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableType+Equatable.swift"; sourceTree = "<group>"; };
 		F72B0ADC208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxCentralManagerDelegateProxy.swift; sourceTree = "<group>"; };
 		F72E8E6920960D530007207E /* NSOutlineView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+Rx.swift"; sourceTree = "<group>"; };
 		F72E8E6B20960E130007207E /* RxOutlineViewDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxOutlineViewDelegateProxy.swift; sourceTree = "<group>"; };
+		F73B3FC623F8B55F00583D8F /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/Mac/RxRelay.framework; sourceTree = "<group>"; };
+		F73B3FC723F8B55F00583D8F /* RxAtomic.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxAtomic.framework; path = Carthage/Build/Mac/RxAtomic.framework; sourceTree = "<group>"; };
+		F73B3FC823F8B55F00583D8F /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/Mac/RxBlocking.framework; sourceTree = "<group>"; };
 		F76CD27020900D7D006C2A36 /* ServiceNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceNode.swift; sourceTree = "<group>"; };
 		F76CD272209010BA006C2A36 /* ServicesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServicesViewController.swift; sourceTree = "<group>"; };
 		F79FAEB520FAC6A20066089F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -92,14 +102,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7F93A98208C9FF4006E7166 /* RxCocoa.framework in Frameworks */,
-				F7F93A96208C9FF4006E7166 /* RxSwift.framework in Frameworks */,
+				F73B3FC323F8B53900583D8F /* RxSwift.framework in Frameworks */,
+				F73B3FCD23F8B55F00583D8F /* RxBlocking.framework in Frameworks */,
+				F73B3FCB23F8B55F00583D8F /* RxAtomic.framework in Frameworks */,
+				F73B3FC123F8B53900583D8F /* RxCocoa.framework in Frameworks */,
+				F73B3FC923F8B55F00583D8F /* RxRelay.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F73B3FC023F8B53900583D8F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F73B3FC723F8B55F00583D8F /* RxAtomic.framework */,
+				F73B3FC823F8B55F00583D8F /* RxBlocking.framework */,
+				F73B3FC623F8B55F00583D8F /* RxRelay.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F7BB97BB21035CB200C0CBB3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +140,7 @@
 				F7F93A95208C9FF4006E7166 /* RxCocoa.framework */,
 				F7F93A94208C9FF4006E7166 /* RxSwift.framework */,
 				F7CD04252041BF0A00DDDCB3 /* Harald */,
+				F73B3FC023F8B53900583D8F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -145,7 +169,6 @@
 				F72E8E6B20960E130007207E /* RxOutlineViewDelegateProxy.swift */,
 				F72E8E6920960D530007207E /* NSOutlineView+Rx.swift */,
 				F7B0251720FA0CCC0030FF96 /* ObservableType+FilterNils.swift */,
-				F71D18AC2083EDF00047DD97 /* ObservableType+Equatable.swift */,
 				F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */,
 				F7CD04242041BF0A00DDDCB3 /* Products */,
 				F7CD042A2041BF0A00DDDCB3 /* Assets.xcassets */,
@@ -166,8 +189,8 @@
 				F7CD041F2041BF0A00DDDCB3 /* Sources */,
 				F7CD04202041BF0A00DDDCB3 /* Frameworks */,
 				F7CD04212041BF0A00DDDCB3 /* Resources */,
-				F7F93A9A208C9FF4006E7166 /* Embed Frameworks */,
 				F7F93A8F208C9F56006E7166 /* CopyFiles */,
+				F73B3FC523F8B53900583D8F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -185,7 +208,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Andrew Shepard";
 				TargetAttributes = {
 					F7CD04222041BF0A00DDDCB3 = {
@@ -243,7 +266,6 @@
 				F7B2AB4B20FC0C8E00A8EDD1 /* Data+HexEncoding.swift in Sources */,
 				F7F93AA2208CC764006E7166 /* CBCentralManager+Rx.swift in Sources */,
 				F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */,
-				F71D18AD2083EDF00047DD97 /* ObservableType+Equatable.swift in Sources */,
 				F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */,
 				F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */,
 				F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */,
@@ -324,7 +346,7 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -376,7 +398,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -388,6 +410,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 9XH5KEL8D8;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
@@ -410,6 +433,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 9XH5KEL8D8;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",

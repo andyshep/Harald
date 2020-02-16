@@ -64,7 +64,7 @@ class WindowController: NSWindowController {
             }
             .asDriver(onErrorJustReturn: nil)
             .filter { $0 != nil }
-            .distinctUntilChanged()
+            .distinctUntilChanged(==)
             .drive(onNext: { [weak self] (discovered) in
                 self?.servicesViewController.representedObject = discovered?.peripheral
                 self?.detailViewController.representedObject = discovered?.packet
@@ -81,7 +81,7 @@ class WindowController: NSWindowController {
             }
             .asDriver(onErrorJustReturn: nil)
             .filter { $0 != nil }
-            .distinctUntilChanged()
+            .distinctUntilChanged(==)
             .drive(onNext: { [weak self] (characteristic) in
                 self?.detailViewController.representedObject = characteristic
             })
