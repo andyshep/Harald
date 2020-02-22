@@ -4,5 +4,5 @@ A macOS app that displays bluetooth peripherals.
 
 ## Requirements
 
-* Xcode 10.2 beta
+* Xcode 11.3
 * Swift 5

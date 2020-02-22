@@ -9,9 +9,6 @@
 import Foundation
 import CoreBluetooth
 
-import RxSwift
-import RxCocoa
-
 @objc class DataNode: NSObject { }
 
 @objc class ServiceNode: DataNode {
@@ -48,8 +45,6 @@ import RxCocoa
     
     @objc let characteristic: CBCharacteristic
     
-    private let bag = DisposeBag()
-    
     init(characteristic: CBCharacteristic) {
         self.characteristic = characteristic
         self.name = characteristic.uuid.description
@@ -67,25 +62,25 @@ import RxCocoa
         return node.characteristic.isEqual(to: self.characteristic)
     }
     
-    private func bind(to characteristic: CBCharacteristic) {
-        characteristic
-            .rx
-            .value
-            .asDriver(onErrorJustReturn: nil)
-            .map { (data) -> String? in
-                guard let data = data else { return nil }
-                guard let string = String(data: data, encoding: .utf8) else {
-                    return data.hexEncodedString().uppercased()
-                }
-                
-                return string
-            }
-            .drive(onNext: { [weak self] (value) in
-                self?.willChangeValue(for: \.value)
-                self?._value = value ?? "Cannot Read Value"
-                self?.didChangeValue(for: \.value)
-            })
-            .disposed(by: bag)
+    private func bind(to characteristic: CBCharacteristic) {        
+//        characteristic
+//            .rx
+//            .value
+//            .asDriver(onErrorJustReturn: nil)
+//            .map { (data) -> String? in
+//                guard let data = data else { return nil }
+//                guard let string = String(data: data, encoding: .utf8) else {
+//                    return data.hexEncodedString().uppercased()
+//                }
+//
+//                return string
+//            }
+//            .drive(onNext: { [weak self] (value) in
+//                self?.willChangeValue(for: \.value)
+//                self?._value = value ?? "Cannot Read Value"
+//                self?.didChangeValue(for: \.value)
+//            })
+//            .disposed(by: bag)
     }
 }
 

@@ -14,16 +14,16 @@ typealias Packet = [String: Any]
 @objc class DiscoveredPeripheral: NSObject {
     @objc let peripheral: CBPeripheral
     @objc let packet: Packet
-    @objc let rssi: NSNumber
+    @objc let rssi: Double
     
-    init(peripheral: CBPeripheral, packet: [String: Any], rssi: NSNumber) {
+    init(peripheral: CBPeripheral, packet: [String: Any], rssi: Double) {
         self.peripheral = peripheral
         self.packet = packet
         self.rssi = rssi
         super.init()
     }
     
-    init(discovery: Discovery) {
+    init(discovery: DiscoveryInfo) {
         self.peripheral = discovery.peripheral
         self.packet = discovery.packet
         self.rssi = discovery.rssi

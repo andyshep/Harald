@@ -8,19 +8,15 @@
 
 import Cocoa
 import CoreBluetooth
-import RxSwift
-import RxCocoa
 
 class PeripheralsViewController: NSViewController {
     
-    public let reloadEvent = PublishSubject<Void>()
+//    public let reloadEvent = PublishSubject<Void>()
     
     @IBOutlet private weak var tableView: NSTableView!
     @IBOutlet private weak var statusTextField: NSTextField!
     
     @objc private var discovered: [DiscoveredPeripheral] = []
-    
-    private let bag = DisposeBag()
     
     public var manager: CBCentralManager? {
         didSet {
@@ -44,82 +40,82 @@ class PeripheralsViewController: NSViewController {
         
         bind(to: peripheralsController)
         
-        reloadEvent
-            .asDriver(onErrorDriveWith: Driver.never())
-            .drive(onNext: { [weak self] _ in
-                guard let this = self else { return }
-                
-                this.closeActiveConnections()
-                this.manager?.stopScan()
-                
-                this.willChangeValue(for: \.discovered)
-                this.discovered = []
-                this.didChangeValue(for: \.discovered)
-                
-                this.manager?.scanForPeripherals(withServices: nil)
-            })
-            .disposed(by: bag)
+//        reloadEvent
+//            .asDriver(onErrorDriveWith: Driver.never())
+//            .drive(onNext: { [weak self] _ in
+//                guard let this = self else { return }
+//
+//                this.closeActiveConnections()
+//                this.manager?.stopScan()
+//
+//                this.willChangeValue(for: \.discovered)
+//                this.discovered = []
+//                this.didChangeValue(for: \.discovered)
+//
+//                this.manager?.scanForPeripherals(withServices: nil)
+//            })
+//            .disposed(by: bag)
     }
 }
 
 extension PeripheralsViewController {
     func bind(to manager: CBCentralManager) {
-        manager.rx.discoveredPeripheral
-            .map { DiscoveredPeripheral(discovery: $0) }
-            .asDriver(onErrorDriveWith: Driver.never())
-            .drive(onNext: { [weak self] (discovery) in
-                guard let this = self else { return }
-                guard let _ = discovery.peripheral.name else { return }
-                
-                if !this.discovered.contains(discovery) {
-                    this.willChangeValue(for: \.discovered)
-                    this.discovered.append(discovery)
-                    this.didChangeValue(for: \.discovered)
-                }
-            })
-            .disposed(by: bag)
-        
-        manager.rx.state
-            .startWith(CBManagerState.unknown)
-            .filter { $0 == .poweredOn }
-            // once the manager is powered on, begin periodic scanning
-            .take(1)
-            // start a 15 second period timer
-            .flatMapLatest { _ -> Observable<Int> in
-                return Observable<Int>.timer(.seconds(0), period: .seconds(15), scheduler: MainScheduler.instance)
-            }
-            // begin scanning whenever to timer fires
-            .do(onNext: { [weak self] (_) in
-                self?.manager?.scanForPeripherals(withServices: nil)
-            })
-            // each time we start scanning, start another one-time 10 second timer
-            .flatMapLatest({ _ -> Observable<Int> in
-                return Observable<Int>.timer(.seconds(10), scheduler: MainScheduler.instance)
-            })
-            // stop scanning once to second timer fires
-            .do(onNext: { [weak self] (_) in
-                self?.manager?.stopScan()
-            })
-            // subscribe (and repeat)
-            .subscribe()
-            .disposed(by: bag)
+//        manager.rx.discoveredPeripheral
+//            .map { DiscoveredPeripheral(discovery: $0) }
+//            .asDriver(onErrorDriveWith: Driver.never())
+//            .drive(onNext: { [weak self] (discovery) in
+//                guard let this = self else { return }
+//                guard let _ = discovery.peripheral.name else { return }
+//
+//                if !this.discovered.contains(discovery) {
+//                    this.willChangeValue(for: \.discovered)
+//                    this.discovered.append(discovery)
+//                    this.didChangeValue(for: \.discovered)
+//                }
+//            })
+//            .disposed(by: bag)
+//
+//        manager.rx.state
+//            .startWith(CBManagerState.unknown)
+//            .filter { $0 == .poweredOn }
+//            // once the manager is powered on, begin periodic scanning
+//            .take(1)
+//            // start a 15 second period timer
+//            .flatMapLatest { _ -> Observable<Int> in
+//                return Observable<Int>.timer(.seconds(0), period: .seconds(15), scheduler: MainScheduler.instance)
+//            }
+//            // begin scanning whenever to timer fires
+//            .do(onNext: { [weak self] (_) in
+//                self?.manager?.scanForPeripherals(withServices: nil)
+//            })
+//            // each time we start scanning, start another one-time 10 second timer
+//            .flatMapLatest({ _ -> Observable<Int> in
+//                return Observable<Int>.timer(.seconds(10), scheduler: MainScheduler.instance)
+//            })
+//            // stop scanning once the second timer fires
+//            .do(onNext: { [weak self] (_) in
+//                self?.manager?.stopScan()
+//            })
+//            // subscribe (and repeat)
+//            .subscribe()
+//            .disposed(by: bag)
     }
     
     func bind(to arrayController: NSArrayController) {
-        arrayController
-            .rx
-            .observeWeakly([AnyObject].self, "arrangedObjects", options: [.initial, .new])
-            .map { [weak self] _ -> Int in
-                guard let controller = self?.peripheralsController else { return 0 }
-                guard let objects = controller.arrangedObjects as? [AnyObject] else { return 0 }
-                return objects.count
-            }
-            .map { discoveryDescriptor(with: $0) }
-            .asDriver(onErrorJustReturn: "No peripherals discovered")
-            .drive(onNext: { [weak self] (result) in
-                self?.statusTextField.stringValue = result
-            })
-            .disposed(by: bag)
+//        arrayController
+//            .rx
+//            .observeWeakly([AnyObject].self, "arrangedObjects", options: [.initial, .new])
+//            .map { [weak self] _ -> Int in
+//                guard let controller = self?.peripheralsController else { return 0 }
+//                guard let objects = controller.arrangedObjects as? [AnyObject] else { return 0 }
+//                return objects.count
+//            }
+//            .map { discoveryDescriptor(with: $0) }
+//            .asDriver(onErrorJustReturn: "No peripherals discovered")
+//            .drive(onNext: { [weak self] (result) in
+//                self?.statusTextField.stringValue = result
+//            })
+//            .disposed(by: bag)
     }
 }
 
