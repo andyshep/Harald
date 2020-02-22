@@ -9,10 +9,14 @@
 import Foundation
 import Cocoa
 import CoreBluetooth
+import Combine
 
 class WindowController: NSWindowController {
     
+    private var cancelables: [AnyCancellable] = []
+    
     private let centralManager = CBCentralManager()
+    private lazy var centralManagerProxy = CentralManagerProxy(manager: centralManager)
     
     @IBOutlet private weak var reloadButton: NSButton!
     @IBOutlet private weak var exportButton: NSButton!
@@ -50,40 +54,34 @@ class WindowController: NSWindowController {
         
         window?.titleVisibility = .hidden
         
-        peripheralsViewController.manager = centralManager
-        servicesViewController.manager = centralManager
+        peripheralsViewController.proxy = centralManagerProxy
+        servicesViewController.proxy = centralManagerProxy
         
-//        peripheralsArrayController
-//            .rx
-//            .observeWeakly(Int.self, "selectionIndex", options: [.new])
-//            .map { [weak self] _ -> DiscoveredPeripheral? in
-//                let selected = self?.peripheralsArrayController.selectedObjects
-//                return selected?.first as? DiscoveredPeripheral
-//            }
-//            .asDriver(onErrorJustReturn: nil)
-//            .filter { $0 != nil }
-//            .distinctUntilChanged(==)
-//            .drive(onNext: { [weak self] (discovered) in
-//                self?.servicesViewController.representedObject = discovered?.peripheral
-//                self?.detailViewController.representedObject = discovered?.packet
-//            })
-//            .disposed(by: bag)
-//        
-//        servicesTreeController
-//            .rx
-//            .observeWeakly(NSIndexPath.self, "selectionIndexPaths", options: [.new])
-//            .map { [weak self] _ -> CBCharacteristic? in
-//                let selected = self?.servicesTreeController.selectedObjects
-//                guard let node = selected?.first as? CharacteristicNode else { return nil }
-//                return node.characteristic
-//            }
-//            .asDriver(onErrorJustReturn: nil)
-//            .filter { $0 != nil }
-//            .distinctUntilChanged(==)
-//            .drive(onNext: { [weak self] (characteristic) in
-//                self?.detailViewController.representedObject = characteristic
-//            })
-//            .disposed(by: bag)
+        peripheralsArrayController
+            .selectionIndexPublisher
+            .compactMap { [weak self] _ -> DiscoveredPeripheral? in
+                let selected = self?.peripheralsArrayController.selectedObjects
+                return selected?.first as? DiscoveredPeripheral
+            }
+            // TODO: .distinctUntilChanged(==)
+            .sink { [weak self] discovered in
+                self?.servicesViewController.representedObject = discovered.peripheral
+                self?.detailViewController.representedObject = discovered.packet
+            }
+            .store(in: &cancelables)
+        
+        servicesTreeController
+            .selectionIndexPathsPublisher
+            .compactMap { [weak self] _ -> CBCharacteristic? in
+                let selected = self?.servicesTreeController.selectedObjects
+                guard let node = selected?.first as? CharacteristicNode else { return nil }
+                return node.characteristic
+            }
+            // TODO: .distinctUntilChanged(==)
+            .sink { [weak self] (characteristic) in
+                self?.detailViewController.representedObject = characteristic
+            }
+            .store(in: &cancelables)
 //        
 //        reloadButton
 //            .rx

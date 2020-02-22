@@ -9,8 +9,12 @@
 import Foundation
 import AppKit
 import CoreBluetooth
+import Combine
 
 class ServicesViewController: NSViewController {
+    
+    private var cancelables: [AnyCancellable] = []
+    private var peripheralCancelables: [AnyCancellable] = []
     
     // MARK: Inputs
     
@@ -21,7 +25,7 @@ class ServicesViewController: NSViewController {
     
     @IBOutlet weak var outlineView: NSOutlineView!
     
-    public var manager: CBCentralManager?
+    public var proxy: CentralManagerProxy?
     
     lazy var servicesController: NSTreeController = {
         let controller = NSTreeController()
@@ -79,6 +83,7 @@ class ServicesViewController: NSViewController {
             if let oldPeripheral = oldValue as? CBPeripheral {
                 if peripherial != oldPeripheral {
                     // update
+                    peripheralCancelables = []
                     bind(to: peripherial)
                 } else {
                     print("not updating")
@@ -120,6 +125,8 @@ private extension ServicesViewController {
     }
     
     private func bind(to peripheral: CBPeripheral) {
+        
+        proxy?.connect(to: peripheral)
         
 //        manager?.rx.connect(to: peripheral)
 //            .asObservable()

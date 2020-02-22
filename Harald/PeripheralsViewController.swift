@@ -8,20 +8,23 @@
 
 import Cocoa
 import CoreBluetooth
+import Combine
 
 class PeripheralsViewController: NSViewController {
     
 //    public let reloadEvent = PublishSubject<Void>()
+    
+    private var cancelables: [AnyCancellable] = []
     
     @IBOutlet private weak var tableView: NSTableView!
     @IBOutlet private weak var statusTextField: NSTextField!
     
     @objc private var discovered: [DiscoveredPeripheral] = []
     
-    public var manager: CBCentralManager? {
+    public var proxy: CentralManagerProxy? {
         didSet {
-            guard let manager = manager else { return }
-            bind(to: manager)
+            guard let proxy = proxy else { return }
+            bind(to: proxy)
         }
     }
     
@@ -59,70 +62,78 @@ class PeripheralsViewController: NSViewController {
 }
 
 extension PeripheralsViewController {
-    func bind(to manager: CBCentralManager) {
-//        manager.rx.discoveredPeripheral
-//            .map { DiscoveredPeripheral(discovery: $0) }
-//            .asDriver(onErrorDriveWith: Driver.never())
-//            .drive(onNext: { [weak self] (discovery) in
-//                guard let this = self else { return }
-//                guard let _ = discovery.peripheral.name else { return }
-//
-//                if !this.discovered.contains(discovery) {
-//                    this.willChangeValue(for: \.discovered)
-//                    this.discovered.append(discovery)
-//                    this.didChangeValue(for: \.discovered)
-//                }
-//            })
-//            .disposed(by: bag)
-//
-//        manager.rx.state
-//            .startWith(CBManagerState.unknown)
-//            .filter { $0 == .poweredOn }
-//            // once the manager is powered on, begin periodic scanning
-//            .take(1)
-//            // start a 15 second period timer
-//            .flatMapLatest { _ -> Observable<Int> in
-//                return Observable<Int>.timer(.seconds(0), period: .seconds(15), scheduler: MainScheduler.instance)
-//            }
-//            // begin scanning whenever to timer fires
-//            .do(onNext: { [weak self] (_) in
-//                self?.manager?.scanForPeripherals(withServices: nil)
-//            })
-//            // each time we start scanning, start another one-time 10 second timer
-//            .flatMapLatest({ _ -> Observable<Int> in
-//                return Observable<Int>.timer(.seconds(10), scheduler: MainScheduler.instance)
-//            })
-//            // stop scanning once the second timer fires
-//            .do(onNext: { [weak self] (_) in
-//                self?.manager?.stopScan()
-//            })
-//            // subscribe (and repeat)
-//            .subscribe()
-//            .disposed(by: bag)
+    func bind(to proxy: CentralManagerProxy) {
+        
+        proxy.peripheralPublisher
+            .compactMap { (result) -> DiscoveredPeripheral? in
+                switch result {
+                case .success(let info):
+                    return DiscoveredPeripheral(discovery: info)
+                case .failure:
+                    return nil
+                }
+            }
+            .sink { [weak self] discovery in
+                guard let this = self else { return }
+                guard let _ = discovery.peripheral.name else { return }
+
+                if !this.discovered.contains(discovery) {
+                    this.willChangeValue(for: \.discovered)
+                    this.discovered.append(discovery)
+                    this.didChangeValue(for: \.discovered)
+                }
+            }
+            .store(in: &cancelables)
+        
+        proxy.statePublisher
+            .filter { $0 == .poweredOn }
+            // once the manager is powered on, begin periodic scanning
+            .prefix(1)
+            // start a 25 second period timer
+            .flatMap { _ -> AnyPublisher<Double, Never> in
+                return RepeatableIntervalTimer(interval: 25.0)
+                    .eraseToAnyPublisher()
+            }
+            // begin scanning whenever to timer fires
+            .do(onNext: { [weak self] in
+                print("starting scan...")
+                self?.proxy?.manager.scanForPeripherals(withServices: nil)
+            })
+            // each time we start scanning, start another one-time 10 second timer
+            .flatMapLatest { _ -> AnyPublisher<Double, Never> in
+                return SingleIntervalTimer(interval: 10.0)
+                    .eraseToAnyPublisher()
+            }
+            // stop scanning once the second timer fires
+            .do(onNext: { [weak self] in
+                print("stopping scan...")
+                self?.proxy?.manager.stopScan()
+            })
+            // subscribe (and repeat)
+            .sink(receiveValue: { _ in } )
+            .store(in: &cancelables)
     }
     
     func bind(to arrayController: NSArrayController) {
-//        arrayController
-//            .rx
-//            .observeWeakly([AnyObject].self, "arrangedObjects", options: [.initial, .new])
-//            .map { [weak self] _ -> Int in
-//                guard let controller = self?.peripheralsController else { return 0 }
-//                guard let objects = controller.arrangedObjects as? [AnyObject] else { return 0 }
-//                return objects.count
-//            }
-//            .map { discoveryDescriptor(with: $0) }
-//            .asDriver(onErrorJustReturn: "No peripherals discovered")
-//            .drive(onNext: { [weak self] (result) in
-//                self?.statusTextField.stringValue = result
-//            })
-//            .disposed(by: bag)
+        arrayController
+            .arrangedObjectsPublisher
+            .map { [weak self] _ -> Int in
+                guard let controller = self?.peripheralsController else { return 0 }
+                guard let objects = controller.arrangedObjects as? [AnyObject] else { return 0 }
+                return objects.count
+            }
+            .map { discoveryDescriptor(with: $0) }
+            .sink { [weak self] (result) in
+                self?.statusTextField.stringValue = result
+            }
+            .store(in: &cancelables)
     }
 }
 
 extension PeripheralsViewController {
     private func closeActiveConnections() {
         guard let discovered = peripheralsController.selectedObjects.first as? DiscoveredPeripheral else { return }
-        manager?.cancelPeripheralConnection(discovered.peripheral)
+        proxy?.manager.cancelPeripheralConnection(discovered.peripheral)
     }
 }
 

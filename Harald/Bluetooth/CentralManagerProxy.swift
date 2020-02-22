@@ -38,7 +38,7 @@ public final class CentralManagerProxy: NSObject {
     private var peripheralConnectionPublisher: PassthroughSubject<CBPeripheral, Error>?
     
     /// The `CBCentralManager` associated with the proxy.
-    private let manager: CBCentralManager
+    let manager: CBCentralManager
     
     init(manager: CBCentralManager) {
         self.manager = manager
