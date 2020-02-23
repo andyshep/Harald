@@ -63,7 +63,6 @@ class PeripheralsViewController: NSViewController {
 extension PeripheralsViewController {
     func bind(to manager: CBCentralManager) {
         manager.peripheralPublisher
-            .print()
             .compactMap { (result) -> DiscoveredPeripheral? in
                 switch result {
                 case .success(let info):
@@ -85,7 +84,6 @@ extension PeripheralsViewController {
             .store(in: &cancellables)
         
         manager.statePublisher
-            .print()
             .filter { $0 == .poweredOn }
             // once the manager is powered on, begin periodic scanning
             .prefix(1)

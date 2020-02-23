@@ -29,8 +29,6 @@ class ServicesViewController: NSViewController {
     
     @IBOutlet weak var outlineView: NSOutlineView!
     
-    lazy var outlineViewProxy = OutlineViewProxy(outlineView: outlineView)
-    
     public var manager: CBCentralManager?
     public var peripheral: CBPeripheral?
     
@@ -52,13 +50,13 @@ class ServicesViewController: NSViewController {
         outlineView.bind(.content, to: servicesController, withKeyPath: "arrangedObjects")
         outlineView.bind(.selectionIndexPaths, to: servicesController, withKeyPath: "selectionIndexPaths")
         
-        outlineViewProxy.itemWillExpandPublisher
+        outlineView.itemWillExpandPublisher
             .sink { [weak self] _ in
                 self?.willChangeValue(for: \.services)
             }
             .store(in: &cancellables)
         
-        outlineViewProxy.itemDidExpandPublisher
+        outlineView.itemDidExpandPublisher
             .sink { [weak self] _ in
                 self?.didChangeValue(for: \.services)
             }
@@ -138,7 +136,7 @@ private extension ServicesViewController {
         peripheralCancellables = []
         
         manager?.connect(to: peripheral)
-            // once connected, ask the peripheral to discover and publish services
+            // once connected, ask the peripheral to discover *and* publish services
             .flatMap { peripheral -> AnyPublisher<[CBService], Error> in
                 return peripheral.discoveredServicesPublisher
             }
@@ -148,15 +146,22 @@ private extension ServicesViewController {
             })
             // discover characteristics for each service by returning
             // an observable tuple stream of services and characteristics
-//            .flatMap { (services) -> AnyPublisher<(CBService, [CBCharacteristic]), Error> in
-//                let characteristics = services.compactMap { $0.discoveredCharacteristics }
-//            }
-            .sink(receiveCompletion: { _ in
-                //
-            }, receiveValue: { (services) in
-                print(services)
+            .flatMap { (services) -> AnyPublisher<(CBService, [CBCharacteristic]), Error> in
+                let characteristics = services.compactMap { $0.discoveredCharacteristics }
+                return Publishers.MergeMany(characteristics).eraseToAnyPublisher()
+            }
+            // update the service nodes with the characteristics (after they are discovered)
+            .do(onNext: { [weak self] (service, characteristics) in
+                guard let this = self else { return }
+                
+                // initiate a call to read each charactertistics value
+                // this will come back later through another Rx pipeline
+                characteristics.forEach { peripheral.readValue(for: $0) }
+
+                this.updateCharacteristics(characteristics, for: service)
+                this.outlineView.expandItem(nil, expandChildren: true)
             })
-            .store(in: &cancellables)
+            .subscribe(andStoreIn: &cancellables)
         
 //        manager?.rx.connect(to: peripheral)
 //            .asObservable()
