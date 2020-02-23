@@ -17,8 +17,8 @@ class ServicesViewController: NSViewController {
         case peripheralProxyIsNil
     }
     
-    private var cancelables: [AnyCancellable] = []
-    private var peripheralCancelables: [AnyCancellable] = []
+    private var cancellables: [AnyCancellable] = []
+    private var peripheralCancellables: [AnyCancellable] = []
     
     // MARK: Inputs
     
@@ -31,8 +31,8 @@ class ServicesViewController: NSViewController {
     
     lazy var outlineViewProxy = OutlineViewProxy(outlineView: outlineView)
     
-    public var proxy: CentralManagerProxy?
-    private var peripheralProxy: PeripheralProxy?
+    public var manager: CBCentralManager?
+    public var peripheral: CBPeripheral?
     
     lazy var servicesController: NSTreeController = {
         let controller = NSTreeController()
@@ -56,25 +56,25 @@ class ServicesViewController: NSViewController {
             .sink { [weak self] _ in
                 self?.willChangeValue(for: \.services)
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
         outlineViewProxy.itemDidExpandPublisher
             .sink { [weak self] _ in
                 self?.didChangeValue(for: \.services)
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
         reloadEvent
             .sink { [weak self] _ in
                 self?.representedObject = nil
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
         exportEvent
             .sink { _ in
                 // TODO: implement
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
     }
     
     override var representedObject: Any? {
@@ -89,7 +89,7 @@ class ServicesViewController: NSViewController {
             
             if let oldPeripheral = oldValue as? CBPeripheral {
                 // close any previous connections
-                proxy?.manager.cancelPeripheralConnection(oldPeripheral)
+                manager?.cancelPeripheralConnection(oldPeripheral)
                 
                 if peripherial != oldPeripheral {
                     // update
@@ -134,22 +134,13 @@ private extension ServicesViewController {
     }
     
     private func bind(to peripheral: CBPeripheral) {
-        peripheralCancelables.forEach { $0.cancel() }
-        peripheralCancelables = []
+        peripheralCancellables.forEach { $0.cancel() }
+        peripheralCancellables = []
         
-        self.peripheralProxy = PeripheralProxy(peripheral: peripheral)
-        
-        proxy?.connect(to: peripheral)
-            .flatMap { [weak self] peripheral -> AnyPublisher<[CBService], Error> in
-                guard
-                    let peripheralProxy = self?.peripheralProxy
-                else {
-                    return Fail<[CBService], Error>(error: GeneralError.peripheralProxyIsNil)
-                        .eraseToAnyPublisher()
-                }
-                
-                peripheral.discoverServices(nil)
-                return peripheralProxy.discoveredServicesPublisher
+        manager?.connect(to: peripheral)
+            // once connected, ask the peripheral to discover and publish services
+            .flatMap { peripheral -> AnyPublisher<[CBService], Error> in
+                return peripheral.discoveredServicesPublisher
             }
             // set the initial response containing services without charactertics
             .do(onNext: { [weak self] (services) in
@@ -158,17 +149,14 @@ private extension ServicesViewController {
             // discover characteristics for each service by returning
             // an observable tuple stream of services and characteristics
 //            .flatMap { (services) -> AnyPublisher<(CBService, [CBCharacteristic]), Error> in
-//
-//
-//                let characteristics = services.compactMap { $0.rx.discoveredCharacteristics }
-//                return Observable.merge(characteristics)
+//                let characteristics = services.compactMap { $0.discoveredCharacteristics }
 //            }
             .sink(receiveCompletion: { _ in
                 //
             }, receiveValue: { (services) in
                 print(services)
             })
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
 //        manager?.rx.connect(to: peripheral)
 //            .asObservable()

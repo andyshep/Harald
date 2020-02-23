@@ -16,7 +16,6 @@ class WindowController: NSWindowController {
     private var cancelables: [AnyCancellable] = []
     
     private let centralManager = CBCentralManager()
-    private lazy var centralManagerProxy = CentralManagerProxy(manager: centralManager)
     
     @IBOutlet private weak var reloadButton: NSButton!
     @IBOutlet private weak var exportButton: NSButton!
@@ -54,8 +53,8 @@ class WindowController: NSWindowController {
         
         window?.titleVisibility = .hidden
         
-        peripheralsViewController.proxy = centralManagerProxy
-        servicesViewController.proxy = centralManagerProxy
+        peripheralsViewController.manager = centralManager
+        servicesViewController.manager = centralManager
         
         peripheralsArrayController
             .selectionIndexPublisher

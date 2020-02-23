@@ -21,10 +21,10 @@ class PeripheralsViewController: NSViewController {
     
     @objc private var discovered: [DiscoveredPeripheral] = []
     
-    public var proxy: CentralManagerProxy? {
+    public var manager: CBCentralManager? {
         didSet {
-            guard let proxy = proxy else { return }
-            bind(to: proxy)
+            guard let manager = manager else { return }
+            bind(to: manager)
         }
     }
     
@@ -48,21 +48,22 @@ class PeripheralsViewController: NSViewController {
                 guard let this = self else { return }
 
                 this.closeActiveConnections()
-                this.proxy?.manager.stopScan()
+                this.manager?.stopScan()
 
                 this.willChangeValue(for: \.discovered)
                 this.discovered = []
                 this.didChangeValue(for: \.discovered)
 
-                this.proxy?.manager.scanForPeripherals(withServices: nil)
+                this.manager?.scanForPeripherals(withServices: nil)
             }
             .store(in: &cancellables)
     }
 }
 
 extension PeripheralsViewController {
-    func bind(to proxy: CentralManagerProxy) {
-        proxy.peripheralPublisher
+    func bind(to manager: CBCentralManager) {
+        manager.peripheralPublisher
+            .print()
             .compactMap { (result) -> DiscoveredPeripheral? in
                 switch result {
                 case .success(let info):
@@ -83,7 +84,8 @@ extension PeripheralsViewController {
             }
             .store(in: &cancellables)
         
-        proxy.statePublisher
+        manager.statePublisher
+            .print()
             .filter { $0 == .poweredOn }
             // once the manager is powered on, begin periodic scanning
             .prefix(1)
@@ -95,7 +97,7 @@ extension PeripheralsViewController {
             // begin scanning whenever to timer fires
             .do(onNext: { [weak self] in
                 print("starting scan...")
-                self?.proxy?.manager.scanForPeripherals(withServices: nil)
+                self?.manager?.scanForPeripherals(withServices: nil)
             })
             // each time we start scanning, start another one-time 10 second timer
             .flatMap { _ -> AnyPublisher<Double, Never> in
@@ -105,7 +107,7 @@ extension PeripheralsViewController {
             // stop scanning once the second timer fires
             .do(onNext: { [weak self] in
                 print("stopping scan...")
-                self?.proxy?.manager.stopScan()
+                self?.manager?.stopScan()
             })
             .subscribe(andStoreIn: &cancellables)
     }
@@ -129,7 +131,7 @@ extension PeripheralsViewController {
 extension PeripheralsViewController {
     private func closeActiveConnections() {
         guard let discovered = peripheralsController.selectedObjects.first as? DiscoveredPeripheral else { return }
-        proxy?.manager.cancelPeripheralConnection(discovered.peripheral)
+        manager?.cancelPeripheralConnection(discovered.peripheral)
     }
 }
 

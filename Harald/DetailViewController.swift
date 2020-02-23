@@ -12,7 +12,7 @@ import Combine
 
 class DetailViewController: NSViewController {
     
-    private var cancelables: [AnyCancellable] = []
+    private var cancellables: [AnyCancellable] = []
     
     @IBOutlet private weak var outlineView: NSOutlineView!
     
@@ -50,7 +50,7 @@ class DetailViewController: NSViewController {
                 self?.packets = packets
                 self?.didChangeValue(for: \.packets)
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
     }
 }
 
