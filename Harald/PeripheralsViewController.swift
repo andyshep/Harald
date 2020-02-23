@@ -12,9 +12,9 @@ import Combine
 
 class PeripheralsViewController: NSViewController {
     
-//    public let reloadEvent = PublishSubject<Void>()
+    private var cancellables: [AnyCancellable] = []
     
-    private var cancelables: [AnyCancellable] = []
+    public let reloadEvent = PassthroughSubject<Void, Never>()
     
     @IBOutlet private weak var tableView: NSTableView!
     @IBOutlet private weak var statusTextField: NSTextField!
@@ -43,27 +43,25 @@ class PeripheralsViewController: NSViewController {
         
         bind(to: peripheralsController)
         
-//        reloadEvent
-//            .asDriver(onErrorDriveWith: Driver.never())
-//            .drive(onNext: { [weak self] _ in
-//                guard let this = self else { return }
-//
-//                this.closeActiveConnections()
-//                this.manager?.stopScan()
-//
-//                this.willChangeValue(for: \.discovered)
-//                this.discovered = []
-//                this.didChangeValue(for: \.discovered)
-//
-//                this.manager?.scanForPeripherals(withServices: nil)
-//            })
-//            .disposed(by: bag)
+        reloadEvent
+            .sink { [weak self] _ in
+                guard let this = self else { return }
+
+                this.closeActiveConnections()
+                this.proxy?.manager.stopScan()
+
+                this.willChangeValue(for: \.discovered)
+                this.discovered = []
+                this.didChangeValue(for: \.discovered)
+
+                this.proxy?.manager.scanForPeripherals(withServices: nil)
+            }
+            .store(in: &cancellables)
     }
 }
 
 extension PeripheralsViewController {
     func bind(to proxy: CentralManagerProxy) {
-        
         proxy.peripheralPublisher
             .compactMap { (result) -> DiscoveredPeripheral? in
                 switch result {
@@ -83,13 +81,13 @@ extension PeripheralsViewController {
                     this.didChangeValue(for: \.discovered)
                 }
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
         proxy.statePublisher
             .filter { $0 == .poweredOn }
             // once the manager is powered on, begin periodic scanning
             .prefix(1)
-            // start a 25 second period timer
+            // start a 25 second repeating timer
             .flatMap { _ -> AnyPublisher<Double, Never> in
                 return RepeatableIntervalTimer(interval: 25.0)
                     .eraseToAnyPublisher()
@@ -100,7 +98,7 @@ extension PeripheralsViewController {
                 self?.proxy?.manager.scanForPeripherals(withServices: nil)
             })
             // each time we start scanning, start another one-time 10 second timer
-            .flatMapLatest { _ -> AnyPublisher<Double, Never> in
+            .flatMap { _ -> AnyPublisher<Double, Never> in
                 return SingleIntervalTimer(interval: 10.0)
                     .eraseToAnyPublisher()
             }
@@ -109,9 +107,7 @@ extension PeripheralsViewController {
                 print("stopping scan...")
                 self?.proxy?.manager.stopScan()
             })
-            // subscribe (and repeat)
-            .sink(receiveValue: { _ in } )
-            .store(in: &cancelables)
+            .subscribe(andStoreIn: &cancellables)
     }
     
     func bind(to arrayController: NSArrayController) {
@@ -126,7 +122,7 @@ extension PeripheralsViewController {
             .sink { [weak self] (result) in
                 self?.statusTextField.stringValue = result
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
     }
 }
 
@@ -160,8 +156,8 @@ private func discoveryDescriptor(with count: Int) -> String {
 
 private extension String {
     var trimmingLowEnergyPrefix: String {
-        if self.prefix(3) == "LE-" {
-            return String(self.dropFirst(3))
+        if prefix(3) == "LE-" {
+            return String(dropFirst(3))
         } else {
             return self
         }

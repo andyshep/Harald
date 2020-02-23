@@ -82,23 +82,21 @@ class WindowController: NSWindowController {
                 self?.detailViewController.representedObject = characteristic
             }
             .store(in: &cancelables)
-//        
-//        reloadButton
-//            .rx
-//            .tap
-//            .subscribe { [weak self] _ in
-//                self?.peripheralsViewController.reloadEvent.onNext(())
-//                self?.servicesViewController.representedObject = nil
-//                self?.detailViewController.representedObject = [:]
-//            }
-//            .disposed(by: bag)
-//        
-//        exportButton
-//            .rx
-//            .tap
-//            .subscribe { [weak self] _ in
-//                self?.servicesViewController.exportEvent.onNext(())
-//            }
-//            .disposed(by: bag)
+        
+        reloadButton
+            .publisher
+            .sink { [weak self] _ in
+                self?.peripheralsViewController.reloadEvent.send(())
+                self?.servicesViewController.representedObject = nil
+                self?.detailViewController.representedObject = [:]
+            }
+            .store(in: &cancelables)
+        
+        exportButton
+            .publisher
+            .sink { [weak self] _ in
+                self?.servicesViewController.exportEvent.send(())
+            }
+            .store(in: &cancelables)
     }
 }

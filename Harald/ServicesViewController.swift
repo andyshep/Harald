@@ -13,19 +13,26 @@ import Combine
 
 class ServicesViewController: NSViewController {
     
+    private enum GeneralError: Error {
+        case peripheralProxyIsNil
+    }
+    
     private var cancelables: [AnyCancellable] = []
     private var peripheralCancelables: [AnyCancellable] = []
     
     // MARK: Inputs
     
-//    public let reloadEvent = PublishSubject<Void>()
-//    public let exportEvent = PublishSubject<Void>()
+    public let reloadEvent = PassthroughSubject<Void, Never>()
+    public let exportEvent = PassthroughSubject<Void, Never>()
     
     // MARK: Public
     
     @IBOutlet weak var outlineView: NSOutlineView!
     
+    lazy var outlineViewProxy = OutlineViewProxy(outlineView: outlineView)
+    
     public var proxy: CentralManagerProxy?
+    private var peripheralProxy: PeripheralProxy?
     
     lazy var servicesController: NSTreeController = {
         let controller = NSTreeController()
@@ -45,29 +52,29 @@ class ServicesViewController: NSViewController {
         outlineView.bind(.content, to: servicesController, withKeyPath: "arrangedObjects")
         outlineView.bind(.selectionIndexPaths, to: servicesController, withKeyPath: "selectionIndexPaths")
         
-//        outlineView.rx.itemAtIndexWillExpandEvent
-//            .subscribe(onNext: { [weak self] _ in
-//                self?.willChangeValue(for: \.services)
-//            })
-//            .disposed(by: bag)
-//
-//        outlineView.rx.itemAtIndexDidExpandEvent
-//            .subscribe(onNext: { [weak self] index in
-//                self?.didChangeValue(for: \.services)
-//            })
-//            .disposed(by: bag)
-//
-//        reloadEvent
-//            .subscribe { [weak self] _ in
-//                self?.representedObject = nil
-//            }
-//            .disposed(by: bag)
-//
-//        exportEvent
-//            .subscribe { _ in
-//                print("export: \(self.services)")
-//            }
-//            .disposed(by: bag)
+        outlineViewProxy.itemWillExpandPublisher
+            .sink { [weak self] _ in
+                self?.willChangeValue(for: \.services)
+            }
+            .store(in: &cancelables)
+        
+        outlineViewProxy.itemDidExpandPublisher
+            .sink { [weak self] _ in
+                self?.didChangeValue(for: \.services)
+            }
+            .store(in: &cancelables)
+        
+        reloadEvent
+            .sink { [weak self] _ in
+                self?.representedObject = nil
+            }
+            .store(in: &cancelables)
+        
+        exportEvent
+            .sink { _ in
+                // TODO: implement
+            }
+            .store(in: &cancelables)
     }
     
     override var representedObject: Any? {
@@ -81,9 +88,11 @@ class ServicesViewController: NSViewController {
             }
             
             if let oldPeripheral = oldValue as? CBPeripheral {
+                // close any previous connections
+                proxy?.manager.cancelPeripheralConnection(oldPeripheral)
+                
                 if peripherial != oldPeripheral {
                     // update
-                    peripheralCancelables = []
                     bind(to: peripherial)
                 } else {
                     print("not updating")
@@ -125,8 +134,41 @@ private extension ServicesViewController {
     }
     
     private func bind(to peripheral: CBPeripheral) {
+        peripheralCancelables.forEach { $0.cancel() }
+        peripheralCancelables = []
+        
+        self.peripheralProxy = PeripheralProxy(peripheral: peripheral)
         
         proxy?.connect(to: peripheral)
+            .flatMap { [weak self] peripheral -> AnyPublisher<[CBService], Error> in
+                guard
+                    let peripheralProxy = self?.peripheralProxy
+                else {
+                    return Fail<[CBService], Error>(error: GeneralError.peripheralProxyIsNil)
+                        .eraseToAnyPublisher()
+                }
+                
+                peripheral.discoverServices(nil)
+                return peripheralProxy.discoveredServicesPublisher
+            }
+            // set the initial response containing services without charactertics
+            .do(onNext: { [weak self] (services) in
+                self?.reloadServiceNodes(using: services)
+            })
+            // discover characteristics for each service by returning
+            // an observable tuple stream of services and characteristics
+//            .flatMap { (services) -> AnyPublisher<(CBService, [CBCharacteristic]), Error> in
+//
+//
+//                let characteristics = services.compactMap { $0.rx.discoveredCharacteristics }
+//                return Observable.merge(characteristics)
+//            }
+            .sink(receiveCompletion: { _ in
+                //
+            }, receiveValue: { (services) in
+                print(services)
+            })
+            .store(in: &cancelables)
         
 //        manager?.rx.connect(to: peripheral)
 //            .asObservable()

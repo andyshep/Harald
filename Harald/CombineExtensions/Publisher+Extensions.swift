@@ -17,10 +17,26 @@ extension Publisher {
             next()
         })
     }
+    
+    func `do`(onNext next: @escaping (Output) -> ()) -> Publishers.HandleEvents<Self> {
+        return handleEvents(receiveOutput: { output in
+            next(output)
+        })
+    }
 }
 
 extension Publisher {
     func flatMapLatest<T: Publisher>(_ transform: @escaping (Self.Output) -> T) -> Publishers.SwitchToLatest<T, Publishers.Map<Self, T>> where T.Failure == Self.Failure {
         map(transform).switchToLatest()
+    }
+}
+
+extension Publisher {
+    func subscribe(andStoreIn cancellables: inout [AnyCancellable]) {
+        sink(
+            receiveCompletion: { _ in },
+            receiveValue: { _ in }
+        )
+        .store(in: &cancellables)
     }
 }

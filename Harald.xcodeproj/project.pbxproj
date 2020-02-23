@@ -17,6 +17,9 @@
 		F77DBC2624019C3700E250D4 /* NSViewController+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2424019C3700E250D4 /* NSViewController+Combine.swift */; };
 		F77DBC2724019C3700E250D4 /* NSArrayController+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2524019C3700E250D4 /* NSArrayController+Combine.swift */; };
 		F77DBC2924019D5700E250D4 /* NSTreeController+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2824019D5700E250D4 /* NSTreeController+Combine.swift */; };
+		F77DBC2B2401A82E00E250D4 /* NSButton+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2A2401A82E00E250D4 /* NSButton+Combine.swift */; };
+		F77DBC2D2401AB7B00E250D4 /* OutlineViewProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2C2401AB7B00E250D4 /* OutlineViewProxy.swift */; };
+		F77DBC2F2401B2A400E250D4 /* PeripheralProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2E2401B2A400E250D4 /* PeripheralProxy.swift */; };
 		F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79FAEB520FAC6A20066089F /* DetailViewController.swift */; };
 		F7B2AB4B20FC0C8E00A8EDD1 /* Data+HexEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */; };
 		F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BB97BC21035CCD00C0CBB3 /* DiscoveredPeripheral.swift */; };
@@ -62,6 +65,9 @@
 		F77DBC2424019C3700E250D4 /* NSViewController+Combine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSViewController+Combine.swift"; sourceTree = "<group>"; };
 		F77DBC2524019C3700E250D4 /* NSArrayController+Combine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSArrayController+Combine.swift"; sourceTree = "<group>"; };
 		F77DBC2824019D5700E250D4 /* NSTreeController+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTreeController+Combine.swift"; sourceTree = "<group>"; };
+		F77DBC2A2401A82E00E250D4 /* NSButton+Combine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSButton+Combine.swift"; sourceTree = "<group>"; };
+		F77DBC2C2401AB7B00E250D4 /* OutlineViewProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineViewProxy.swift; sourceTree = "<group>"; };
+		F77DBC2E2401B2A400E250D4 /* PeripheralProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralProxy.swift; sourceTree = "<group>"; };
 		F79FAEB520FAC6A20066089F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+HexEncoding.swift"; sourceTree = "<group>"; };
 		F7BB97BC21035CCD00C0CBB3 /* DiscoveredPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredPeripheral.swift; sourceTree = "<group>"; };
@@ -99,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				F77DBC1B2401987400E250D4 /* CentralManagerProxy.swift */,
+				F77DBC2E2401B2A400E250D4 /* PeripheralProxy.swift */,
 			);
 			path = Bluetooth;
 			sourceTree = "<group>";
@@ -106,9 +113,11 @@
 		F77DBC2324019BCD00E250D4 /* CombineExtensions */ = {
 			isa = PBXGroup;
 			children = (
+				F77DBC2A2401A82E00E250D4 /* NSButton+Combine.swift */,
 				F77DBC2524019C3700E250D4 /* NSArrayController+Combine.swift */,
 				F77DBC2824019D5700E250D4 /* NSTreeController+Combine.swift */,
 				F77DBC2424019C3700E250D4 /* NSViewController+Combine.swift */,
+				F77DBC2C2401AB7B00E250D4 /* OutlineViewProxy.swift */,
 				F77DBC1D2401988800E250D4 /* Publisher+Extensions.swift */,
 				F77DBC1F2401988800E250D4 /* RepeatableIntervalTimer.swift */,
 				F77DBC1E2401988800E250D4 /* SingleIntervalTimer.swift */,
@@ -248,6 +257,9 @@
 				F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */,
 				F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */,
 				F77DBC2624019C3700E250D4 /* NSViewController+Combine.swift in Sources */,
+				F77DBC2D2401AB7B00E250D4 /* OutlineViewProxy.swift in Sources */,
+				F77DBC2B2401A82E00E250D4 /* NSButton+Combine.swift in Sources */,
+				F77DBC2F2401B2A400E250D4 /* PeripheralProxy.swift in Sources */,
 				F77DBC212401988800E250D4 /* SingleIntervalTimer.swift in Sources */,
 				F77DBC2924019D5700E250D4 /* NSTreeController+Combine.swift in Sources */,
 				F77DBC202401988800E250D4 /* Publisher+Extensions.swift in Sources */,
