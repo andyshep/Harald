@@ -162,33 +162,5 @@ private extension ServicesViewController {
                 this.outlineView.expandItem(nil, expandChildren: true)
             })
             .subscribe(andStoreIn: &cancellables)
-        
-//        manager?.rx.connect(to: peripheral)
-//            .asObservable()
-//            .flatMapLatest { $0.rx.discoveredServices }
-//            // set the initial response containing services without charactertics
-//            .map { [weak self] services -> [CBService] in
-//                self?.reloadServiceNodes(using: services)
-//                return services
-//            }
-//            // discover characteristics for each service by returning
-//            // an observable tuple stream of services and characteristics
-//            .flatMap { (services) -> Observable<(CBService, [CBCharacteristic])> in
-//                let characteristics = services.compactMap { $0.rx.discoveredCharacteristics }
-//                return Observable.merge(characteristics)
-//            }
-//            // update the service nodes with the characterics once discovered
-//            .map { [weak self] (service, characterics) in
-//                guard let this = self else { return }
-//
-//                // initiate a call to read each charactertistics value
-//                // this will come back later through another Rx pipeline
-//                characterics.forEach { peripheral.readValue(for: $0) }
-//
-//                this.updateCharacteristics(characterics, for: service)
-//                this.outlineView.expandItem(nil, expandChildren: true)
-//            }
-//            .subscribe()
-//            .disposed(by: peripheralsBag)
     }
 }
