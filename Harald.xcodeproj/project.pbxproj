@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */; };
-		F72B0ADD208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72B0ADC208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift */; };
 		F72E8E6A20960D530007207E /* NSOutlineView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72E8E6920960D530007207E /* NSOutlineView+Rx.swift */; };
 		F72E8E6C20960E130007207E /* RxOutlineViewDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72E8E6B20960E130007207E /* RxOutlineViewDelegateProxy.swift */; };
 		F73B3FC123F8B53900583D8F /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A95208C9FF4006E7166 /* RxCocoa.framework */; };
@@ -17,10 +16,12 @@
 		F73B3FC423F8B53900583D8F /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F7F93A94208C9FF4006E7166 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F73B3FC923F8B55F00583D8F /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC623F8B55F00583D8F /* RxRelay.framework */; };
 		F73B3FCA23F8B55F00583D8F /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC623F8B55F00583D8F /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F73B3FCB23F8B55F00583D8F /* RxAtomic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC723F8B55F00583D8F /* RxAtomic.framework */; };
-		F73B3FCC23F8B55F00583D8F /* RxAtomic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC723F8B55F00583D8F /* RxAtomic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F73B3FCD23F8B55F00583D8F /* RxBlocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC823F8B55F00583D8F /* RxBlocking.framework */; };
 		F73B3FCE23F8B55F00583D8F /* RxBlocking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F73B3FC823F8B55F00583D8F /* RxBlocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F76086E824034A8E0092593C /* CBCentralManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76086E424034A8E0092593C /* CBCentralManager+Rx.swift */; };
+		F76086E924034A8E0092593C /* CBPeripheral+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76086E524034A8E0092593C /* CBPeripheral+Rx.swift */; };
+		F76086EA24034A8E0092593C /* RxCentralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76086E624034A8E0092593C /* RxCentralManagerDelegateProxy.swift */; };
+		F76086EB24034A8E0092593C /* RxPeripheralDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76086E724034A8E0092593C /* RxPeripheralDelegateProxy.swift */; };
 		F76CD27120900D7D006C2A36 /* ServiceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD27020900D7D006C2A36 /* ServiceNode.swift */; };
 		F76CD273209010BB006C2A36 /* ServicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD272209010BA006C2A36 /* ServicesViewController.swift */; };
 		F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79FAEB520FAC6A20066089F /* DetailViewController.swift */; };
@@ -33,9 +34,6 @@
 		F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CD04B42043068600DDDCB3 /* WindowController.swift */; };
 		F7F93A9D208CA009006E7166 /* RxSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = F7F93A9B208CA009006E7166 /* RxSwift.framework.dSYM */; };
 		F7F93A9E208CA009006E7166 /* RxCocoa.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = F7F93A9C208CA009006E7166 /* RxCocoa.framework.dSYM */; };
-		F7F93AA2208CC764006E7166 /* CBCentralManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F93AA1208CC764006E7166 /* CBCentralManager+Rx.swift */; };
-		F7F93AA4208D0C48006E7166 /* CBPeripheral+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F93AA3208D0C48006E7166 /* CBPeripheral+Rx.swift */; };
-		F7F93AA6208D0CA0006E7166 /* RxPeripheralDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F93AA5208D0CA0006E7166 /* RxPeripheralDelegateProxy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,7 +45,6 @@
 			files = (
 				F73B3FC423F8B53900583D8F /* RxSwift.framework in Embed Frameworks */,
 				F73B3FCE23F8B55F00583D8F /* RxBlocking.framework in Embed Frameworks */,
-				F73B3FCC23F8B55F00583D8F /* RxAtomic.framework in Embed Frameworks */,
 				F73B3FC223F8B53900583D8F /* RxCocoa.framework in Embed Frameworks */,
 				F73B3FCA23F8B55F00583D8F /* RxRelay.framework in Embed Frameworks */,
 			);
@@ -69,12 +66,15 @@
 
 /* Begin PBXFileReference section */
 		F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralsViewController.swift; sourceTree = "<group>"; };
-		F72B0ADC208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxCentralManagerDelegateProxy.swift; sourceTree = "<group>"; };
 		F72E8E6920960D530007207E /* NSOutlineView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+Rx.swift"; sourceTree = "<group>"; };
 		F72E8E6B20960E130007207E /* RxOutlineViewDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxOutlineViewDelegateProxy.swift; sourceTree = "<group>"; };
 		F73B3FC623F8B55F00583D8F /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/Mac/RxRelay.framework; sourceTree = "<group>"; };
 		F73B3FC723F8B55F00583D8F /* RxAtomic.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxAtomic.framework; path = Carthage/Build/Mac/RxAtomic.framework; sourceTree = "<group>"; };
 		F73B3FC823F8B55F00583D8F /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/Mac/RxBlocking.framework; sourceTree = "<group>"; };
+		F76086E424034A8E0092593C /* CBCentralManager+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CBCentralManager+Rx.swift"; sourceTree = "<group>"; };
+		F76086E524034A8E0092593C /* CBPeripheral+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CBPeripheral+Rx.swift"; sourceTree = "<group>"; };
+		F76086E624034A8E0092593C /* RxCentralManagerDelegateProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCentralManagerDelegateProxy.swift; sourceTree = "<group>"; };
+		F76086E724034A8E0092593C /* RxPeripheralDelegateProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxPeripheralDelegateProxy.swift; sourceTree = "<group>"; };
 		F76CD27020900D7D006C2A36 /* ServiceNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceNode.swift; sourceTree = "<group>"; };
 		F76CD272209010BA006C2A36 /* ServicesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServicesViewController.swift; sourceTree = "<group>"; };
 		F79FAEB520FAC6A20066089F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -92,9 +92,6 @@
 		F7F93A95208C9FF4006E7166 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/Mac/RxCocoa.framework; sourceTree = "<group>"; };
 		F7F93A9B208CA009006E7166 /* RxSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxSwift.framework.dSYM; path = Carthage/Build/Mac/RxSwift.framework.dSYM; sourceTree = "<group>"; };
 		F7F93A9C208CA009006E7166 /* RxCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxCocoa.framework.dSYM; path = Carthage/Build/Mac/RxCocoa.framework.dSYM; sourceTree = "<group>"; };
-		F7F93AA1208CC764006E7166 /* CBCentralManager+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBCentralManager+Rx.swift"; sourceTree = "<group>"; };
-		F7F93AA3208D0C48006E7166 /* CBPeripheral+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBPeripheral+Rx.swift"; sourceTree = "<group>"; };
-		F7F93AA5208D0CA0006E7166 /* RxPeripheralDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxPeripheralDelegateProxy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +101,6 @@
 			files = (
 				F73B3FC323F8B53900583D8F /* RxSwift.framework in Frameworks */,
 				F73B3FCD23F8B55F00583D8F /* RxBlocking.framework in Frameworks */,
-				F73B3FCB23F8B55F00583D8F /* RxAtomic.framework in Frameworks */,
 				F73B3FC123F8B53900583D8F /* RxCocoa.framework in Frameworks */,
 				F73B3FC923F8B55F00583D8F /* RxRelay.framework in Frameworks */,
 			);
@@ -121,6 +117,17 @@
 				F73B3FC623F8B55F00583D8F /* RxRelay.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F76086E324034A8E0092593C /* RxBluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				F76086E424034A8E0092593C /* CBCentralManager+Rx.swift */,
+				F76086E524034A8E0092593C /* CBPeripheral+Rx.swift */,
+				F76086E624034A8E0092593C /* RxCentralManagerDelegateProxy.swift */,
+				F76086E724034A8E0092593C /* RxPeripheralDelegateProxy.swift */,
+			);
+			path = RxBluetooth;
 			sourceTree = "<group>";
 		};
 		F7BB97BB21035CB200C0CBB3 /* Model */ = {
@@ -156,16 +163,13 @@
 		F7CD04252041BF0A00DDDCB3 /* Harald */ = {
 			isa = PBXGroup;
 			children = (
+				F76086E324034A8E0092593C /* RxBluetooth */,
 				F7BB97BB21035CB200C0CBB3 /* Model */,
 				F7CD04262041BF0A00DDDCB3 /* AppDelegate.swift */,
 				F7CD04B42043068600DDDCB3 /* WindowController.swift */,
 				F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */,
 				F76CD272209010BA006C2A36 /* ServicesViewController.swift */,
 				F79FAEB520FAC6A20066089F /* DetailViewController.swift */,
-				F72B0ADC208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift */,
-				F7F93AA1208CC764006E7166 /* CBCentralManager+Rx.swift */,
-				F7F93AA5208D0CA0006E7166 /* RxPeripheralDelegateProxy.swift */,
-				F7F93AA3208D0C48006E7166 /* CBPeripheral+Rx.swift */,
 				F72E8E6B20960E130007207E /* RxOutlineViewDelegateProxy.swift */,
 				F72E8E6920960D530007207E /* NSOutlineView+Rx.swift */,
 				F7B0251720FA0CCC0030FF96 /* ObservableType+FilterNils.swift */,
@@ -258,21 +262,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7F93AA4208D0C48006E7166 /* CBPeripheral+Rx.swift in Sources */,
 				F7B0251820FA0CCC0030FF96 /* ObservableType+FilterNils.swift in Sources */,
-				F7F93AA6208D0CA0006E7166 /* RxPeripheralDelegateProxy.swift in Sources */,
+				F76086E824034A8E0092593C /* CBCentralManager+Rx.swift in Sources */,
+				F76086EB24034A8E0092593C /* RxPeripheralDelegateProxy.swift in Sources */,
 				F72E8E6A20960D530007207E /* NSOutlineView+Rx.swift in Sources */,
+				F76086EA24034A8E0092593C /* RxCentralManagerDelegateProxy.swift in Sources */,
 				F72E8E6C20960E130007207E /* RxOutlineViewDelegateProxy.swift in Sources */,
 				F7B2AB4B20FC0C8E00A8EDD1 /* Data+HexEncoding.swift in Sources */,
-				F7F93AA2208CC764006E7166 /* CBCentralManager+Rx.swift in Sources */,
 				F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */,
+				F76086E924034A8E0092593C /* CBPeripheral+Rx.swift in Sources */,
 				F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */,
 				F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */,
 				F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */,
 				F7CD04272041BF0A00DDDCB3 /* AppDelegate.swift in Sources */,
 				F76CD273209010BB006C2A36 /* ServicesViewController.swift in Sources */,
 				F76CD27120900D7D006C2A36 /* ServiceNode.swift in Sources */,
-				F72B0ADD208BEE9A004AF150 /* RxCentralManagerDelegateProxy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
