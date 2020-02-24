@@ -19,20 +19,25 @@ public struct DiscoveryInfo {
 }
 
 extension CBCentralManager {
+    
+    public typealias StatePublisher = AnyPublisher<CBManagerState, Never>
+    public typealias PeripheralPublisher = AnyPublisher<CBPeripheral, Error>
+    public typealias DiscoveryInfoPublisher = AnyPublisher<Result<DiscoveryInfo, Error>, Never>
+    
     /// Emits with state changes from the `CBCentalManager`. Initially set the `.unknown`
-    public var statePublisher: AnyPublisher<CBManagerState, Never> {
+    public var statePublisher: StatePublisher {
         return proxy.statePublisher
     }
     
     /// Emits with discovered peripherals from the `CBCentralManager`. The manager must be scanning before
     /// peripherals will emit.
-    public var peripheralPublisher: AnyPublisher<Result<DiscoveryInfo, Error>, Never> {
+    public var peripheralPublisher: DiscoveryInfoPublisher {
         return proxy.peripheralPublisher
     }
     
     /// Emits with information about the connected peripheral. Private `PassthroughSubject` used to handle
     /// delegate callbacks from `centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral)`
-    public func connect(to peripheral: CBPeripheral) -> AnyPublisher<CBPeripheral, Error> {
+    public func connect(to peripheral: CBPeripheral) -> PeripheralPublisher {
         return proxy.connect(to: peripheral)
     }
     

@@ -11,8 +11,12 @@ import Combine
 import CoreBluetooth
 
 extension CBPeripheral {
+    
+    /// Publisher that emits a collection of  `CBService` objects or an `Error`.
+    public typealias ServicesPublisher = AnyPublisher<[CBService], Error>
+    
     /// Emits with the discovered services belonging to the `CBPeripheral`.
-    var discoveredServicesPublisher: AnyPublisher<[CBService], Error> {
+    public var discoveredServicesPublisher: ServicesPublisher {
         let publisher = proxy.discoveredServicesPublisher
         discoverServices(nil)
         return publisher
@@ -31,8 +35,12 @@ extension CBPeripheral {
 }
 
 extension CBService {
+    
+    /// Publisher that emits a collection of  `CBCharacteristic` objects or an `Error`.
+    public typealias CharacteristicsPublisher = AnyPublisher<(CBService, [CBCharacteristic]), Error>
+    
     /// Emits with the discoverered charactertics belonging to the service
-    var discoveredCharacteristics: AnyPublisher<(CBService, [CBCharacteristic]), Error> {
+    var discoveredCharacteristics: CharacteristicsPublisher {
         let publisher = peripheral.proxy
             .discoveredCharacteristicsPublisher
         
@@ -42,14 +50,21 @@ extension CBService {
 }
 
 extension CBCharacteristic {
+    
+    /// Publisher that emits with the value of the `CBCharacteristic`
+    typealias ValuePublisher = AnyPublisher<Data?, Never>
+    
+    /// Publisher that emits with the set of descriptors associated with the `CBCharacteristic`
+    typealias CharacteristicDescriptorsPublisher = AnyPublisher<(CBCharacteristic, [CBDescriptor]), Never>
+    
     /// Emits with the discovered characteristic descriptors
-    var discoveredCharacteristicDescriptorsPublisher: AnyPublisher<(CBCharacteristic, [CBDescriptor]), Never> {
+    var discoveredCharacteristicDescriptorsPublisher: CharacteristicDescriptorsPublisher {
         return service.peripheral.proxy
             .discoveredCharacteristicDescriptorsPublisher
     }
     
     /// Emits with the characteristic value
-    var valuePublisher: AnyPublisher<Data?, Never> {
+    var valuePublisher: ValuePublisher {
         let publisher = service.peripheral.proxy
             .updatedCharacteristicValuePublisher
             .filter { (characteristic) -> Bool in
@@ -66,7 +81,6 @@ extension CBCharacteristic {
 }
 
 private var _peripheralProxyKey: UInt8 = 0
-
 private class PeripheralProxy: NSObject {
     
     var discoveredServicesPublisher: AnyPublisher<[CBService], Error> {

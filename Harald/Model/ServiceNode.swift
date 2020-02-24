@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 import CoreBluetooth
 
 @objc class DataNode: NSObject { }
@@ -45,12 +46,18 @@ import CoreBluetooth
     
     @objc let characteristic: CBCharacteristic
     
+    private var cancellables: [AnyCancellable] = []
+    
     init(characteristic: CBCharacteristic) {
         self.characteristic = characteristic
         self.name = characteristic.uuid.description
         super.init()
         
         bind(to: characteristic)
+    }
+    
+    deinit {
+        cancellables.forEach { $0.cancel() }
     }
     
     @objc var isLeaf: Bool {
@@ -62,25 +69,22 @@ import CoreBluetooth
         return node.characteristic.isEqual(to: self.characteristic)
     }
     
-    private func bind(to characteristic: CBCharacteristic) {        
-//        characteristic
-//            .rx
-//            .value
-//            .asDriver(onErrorJustReturn: nil)
-//            .map { (data) -> String? in
-//                guard let data = data else { return nil }
-//                guard let string = String(data: data, encoding: .utf8) else {
-//                    return data.hexEncodedString().uppercased()
-//                }
-//
-//                return string
-//            }
-//            .drive(onNext: { [weak self] (value) in
-//                self?.willChangeValue(for: \.value)
-//                self?._value = value ?? "Cannot Read Value"
-//                self?.didChangeValue(for: \.value)
-//            })
-//            .disposed(by: bag)
+    private func bind(to characteristic: CBCharacteristic) {
+        characteristic
+            .valuePublisher
+            .compactMap { (data) -> String in
+                guard let data = data else { return "Empty" }
+                guard let string = String(data: data, encoding: .utf8) else {
+                    return data.hexEncodedString().uppercased()
+                }
+                return string
+            }
+            .sink { [weak self] (value) in
+                self?.willChangeValue(for: \.value)
+                self?._value = value
+                self?.didChangeValue(for: \.value)
+            }
+            .store(in: &cancellables)
     }
 }
 

@@ -11,13 +11,15 @@ import Combine
 
 extension NSOutlineView {
     
+    typealias IndexPublisher = AnyPublisher<Int, Never>
+    
     /// Emits with the index of an item that will expand
-    var itemWillExpandPublisher: AnyPublisher<Int, Never> {
+    var itemWillExpandPublisher: IndexPublisher {
         return proxy.itemWillExpandPublisher
     }
     
     /// Emits with the index of an item that did expand
-    var itemDidExpandPublisher: AnyPublisher<Int, Never> {
+    var itemDidExpandPublisher: IndexPublisher {
         return proxy.itemDidExpandPublisher
     }
     

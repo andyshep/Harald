@@ -13,7 +13,7 @@ import Combine
 
 class WindowController: NSWindowController {
     
-    private var cancelables: [AnyCancellable] = []
+    private var cancellables: [AnyCancellable] = []
     
     private let centralManager = CBCentralManager()
     
@@ -62,12 +62,12 @@ class WindowController: NSWindowController {
                 let selected = self?.peripheralsArrayController.selectedObjects
                 return selected?.first as? DiscoveredPeripheral
             }
-            // TODO: .distinctUntilChanged(==)
+            .removeDuplicates()
             .sink { [weak self] discovered in
                 self?.servicesViewController.representedObject = discovered.peripheral
                 self?.detailViewController.representedObject = discovered.packet
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
         servicesTreeController
             .selectionIndexPathsPublisher
@@ -76,11 +76,11 @@ class WindowController: NSWindowController {
                 guard let node = selected?.first as? CharacteristicNode else { return nil }
                 return node.characteristic
             }
-            // TODO: .distinctUntilChanged(==)
+            .removeDuplicates()
             .sink { [weak self] (characteristic) in
                 self?.detailViewController.representedObject = characteristic
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
         reloadButton
             .publisher
@@ -89,13 +89,13 @@ class WindowController: NSWindowController {
                 self?.servicesViewController.representedObject = nil
                 self?.detailViewController.representedObject = [:]
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
         
         exportButton
             .publisher
             .sink { [weak self] _ in
                 self?.servicesViewController.exportEvent.send(())
             }
-            .store(in: &cancelables)
+            .store(in: &cancellables)
     }
 }
