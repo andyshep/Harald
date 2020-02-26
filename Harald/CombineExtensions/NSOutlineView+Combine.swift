@@ -11,6 +11,7 @@ import Combine
 
 extension NSOutlineView {
     
+    /// Publisher that emits with an index associated with an `IndexPath`
     typealias IndexPublisher = AnyPublisher<Int, Never>
     
     /// Emits with the index of an item that will expand
@@ -36,7 +37,6 @@ extension NSOutlineView {
 }
 
 private var _outlineViewProxyKey: UInt8 = 0
-
 private class OutlineViewProxy: NSObject {
     
     var itemWillExpandPublisher: AnyPublisher<Int, Never> {

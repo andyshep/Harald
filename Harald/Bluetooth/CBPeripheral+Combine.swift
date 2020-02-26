@@ -52,7 +52,7 @@ extension CBService {
 extension CBCharacteristic {
     
     /// Publisher that emits with the value of the `CBCharacteristic`
-    typealias ValuePublisher = AnyPublisher<Data?, Never>
+    typealias ValuePublisher = AnyPublisher<Result<Data?, Error>, Never>
     
     /// Publisher that emits with the set of descriptors associated with the `CBCharacteristic`
     typealias CharacteristicDescriptorsPublisher = AnyPublisher<(CBCharacteristic, [CBDescriptor]), Never>
@@ -67,11 +67,21 @@ extension CBCharacteristic {
     var valuePublisher: ValuePublisher {
         let publisher = service.peripheral.proxy
             .updatedCharacteristicValuePublisher
-            .filter { (characteristic) -> Bool in
-                return self.uuid == characteristic.uuid
+            .filter { result -> Bool in
+                switch result {
+                case .success(let characteristic):
+                    return self.uuid == characteristic.uuid
+                case .failure:
+                    return true
+                }
             }
-            .map { (characteristic) -> Data? in
-                return characteristic.value
+            .map { result -> Result<Data?, Error> in
+                switch result {
+                case .success(let characteristic):
+                    return .success(characteristic.value)
+                case .failure(let error):
+                    return .failure(error)
+                }
             }
             .eraseToAnyPublisher()
         
@@ -98,10 +108,10 @@ private class PeripheralProxy: NSObject {
     }
     private let _discoveredCharacteristicDescriptorsSubject = PassthroughSubject<(CBCharacteristic, [CBDescriptor]), Never>()
     
-    var updatedCharacteristicValuePublisher: AnyPublisher<CBCharacteristic, Never> {
+    var updatedCharacteristicValuePublisher: AnyPublisher<Result<CBCharacteristic, Error>, Never> {
         return _updatedCharacteristicValueSubject.eraseToAnyPublisher()
     }
-    private let _updatedCharacteristicValueSubject = PassthroughSubject<CBCharacteristic, Never>()
+    private let _updatedCharacteristicValueSubject = PassthroughSubject<Result<CBCharacteristic, Error>, Never>()
 
     private let peripheral: CBPeripheral
     
@@ -135,6 +145,10 @@ extension PeripheralProxy: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        _updatedCharacteristicValueSubject.send(characteristic)
+        if let error = error {
+            _updatedCharacteristicValueSubject.send(.failure(error))
+        } else {
+            _updatedCharacteristicValueSubject.send(.success(characteristic))
+        }
     }
 }

@@ -58,6 +58,7 @@ import CoreBluetooth
     
     deinit {
         cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
     }
     
     @objc var isLeaf: Bool {
@@ -70,14 +71,24 @@ import CoreBluetooth
     }
     
     private func bind(to characteristic: CBCharacteristic) {
+//        guard
+//            characteristic.properties.contains(.read),
+//            characteristic.properties.contains(.notify)
+//        else { return }
+        
         characteristic
             .valuePublisher
-            .compactMap { (data) -> String in
-                guard let data = data else { return "Empty" }
-                guard let string = String(data: data, encoding: .utf8) else {
-                    return data.hexEncodedString().uppercased()
+            .compactMap { result -> String in
+                switch result {
+                case .success(let data):
+                    guard let data = data else { return "Empty" }
+                    guard let string = String(data: data, encoding: .utf8) else {
+                        return data.hexEncodedString().uppercased()
+                    }
+                    return string
+                case .failure(let error):
+                    return error.localizedDescription
                 }
-                return string
             }
             .sink { [weak self] (value) in
                 self?.willChangeValue(for: \.value)
