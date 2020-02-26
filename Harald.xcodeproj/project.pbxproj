@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F718BAD82405F4EC000420AD /* NSSearchField+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F718BAD72405F4EC000420AD /* NSSearchField+Combine.swift */; };
 		F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */; };
 		F76CD27120900D7D006C2A36 /* ServiceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD27020900D7D006C2A36 /* ServiceNode.swift */; };
 		F76CD273209010BB006C2A36 /* ServicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD272209010BA006C2A36 /* ServicesViewController.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F718BAD72405F4EC000420AD /* NSSearchField+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSSearchField+Combine.swift"; sourceTree = "<group>"; };
 		F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralsViewController.swift; sourceTree = "<group>"; };
 		F73B3FC623F8B55F00583D8F /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/Mac/RxRelay.framework; sourceTree = "<group>"; };
 		F73B3FC723F8B55F00583D8F /* RxAtomic.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxAtomic.framework; path = Carthage/Build/Mac/RxAtomic.framework; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				F77DBC1D2401988800E250D4 /* Publisher+Extensions.swift */,
 				F77DBC1F2401988800E250D4 /* RepeatableIntervalTimer.swift */,
 				F77DBC1E2401988800E250D4 /* SingleIntervalTimer.swift */,
+				F718BAD72405F4EC000420AD /* NSSearchField+Combine.swift */,
 			);
 			path = CombineExtensions;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				F7B2AB4B20FC0C8E00A8EDD1 /* Data+HexEncoding.swift in Sources */,
 				F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */,
 				F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */,
+				F718BAD82405F4EC000420AD /* NSSearchField+Combine.swift in Sources */,
 				F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */,
 				F77DBC2624019C3700E250D4 /* NSViewController+Combine.swift in Sources */,
 				F77DBC2D2401AB7B00E250D4 /* NSOutlineView+Combine.swift in Sources */,

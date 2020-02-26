@@ -14,12 +14,17 @@ class PeripheralsViewController: NSViewController {
     
     private var cancellables: [AnyCancellable] = []
     
-    public let reloadEvent = PassthroughSubject<Void, Never>()
+    public var reloadEvent = PassthroughSubject<Void, Never>()
     
     @IBOutlet private weak var tableView: NSTableView!
     @IBOutlet private weak var statusTextField: NSTextField!
     
     @objc private var discovered: [DiscoveredPeripheral] = []
+    
+    public var searchTermChanged: AnySubscriber<String, Never> {
+        return AnySubscriber(_searchTermChanged)
+    }
+    private let _searchTermChanged = PassthroughSubject<String, Never>()
     
     public var manager: CBCentralManager? {
         didSet {
@@ -55,6 +60,18 @@ class PeripheralsViewController: NSViewController {
                 this.didChangeValue(for: \.discovered)
 
                 this.manager?.scanForPeripherals(withServices: nil)
+            }
+            .store(in: &cancellables)
+        
+        _searchTermChanged
+            .eraseToAnyPublisher()
+            .debounce(for: .milliseconds(250), scheduler: RunLoop.main)
+            .map { string -> NSPredicate? in
+                guard string.count != 0 else { return nil }
+                return NSPredicate(format: "peripheral.displayName contains[c] %@", string)
+            }
+            .sink { [weak self] predicate in
+                self?.peripheralsController.filterPredicate = predicate
             }
             .store(in: &cancellables)
     }

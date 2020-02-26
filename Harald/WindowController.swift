@@ -19,6 +19,7 @@ class WindowController: NSWindowController {
     
     @IBOutlet private weak var reloadButton: NSButton!
     @IBOutlet private weak var exportButton: NSButton!
+    @IBOutlet private weak var searchField: NSSearchField!
     
     lazy private var peripheralsViewController: PeripheralsViewController = {
         guard let splitViewController = contentViewController as? NSSplitViewController else { fatalError() }
@@ -97,5 +98,9 @@ class WindowController: NSWindowController {
                 self?.servicesViewController.exportEvent.send(())
             }
             .store(in: &cancellables)
+        
+        searchField
+            .stringValuePublisher
+            .receive(subscriber: peripheralsViewController.searchTermChanged)
     }
 }
