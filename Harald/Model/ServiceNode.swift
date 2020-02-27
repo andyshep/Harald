@@ -71,10 +71,8 @@ import CoreBluetooth
     }
     
     private func bind(to characteristic: CBCharacteristic) {
-//        guard
-//            characteristic.properties.contains(.read),
-//            characteristic.properties.contains(.notify)
-//        else { return }
+        guard characteristic.properties.contains(.read) else { return }
+        guard !characteristic.properties.contains(.notifyEncryptionRequired) else { return }
         
         characteristic
             .valuePublisher
