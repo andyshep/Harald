@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F718BAD82405F4EC000420AD /* NSSearchField+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F718BAD72405F4EC000420AD /* NSSearchField+Combine.swift */; };
 		F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */; };
+		F734C1DE24F1E9C0009B5C4E /* Logger+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F734C1DD24F1E9C0009B5C4E /* Logger+Custom.swift */; };
 		F76CD27120900D7D006C2A36 /* ServiceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD27020900D7D006C2A36 /* ServiceNode.swift */; };
 		F76CD273209010BB006C2A36 /* ServicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76CD272209010BA006C2A36 /* ServicesViewController.swift */; };
 		F77DBC1C2401987400E250D4 /* CBCentralManager+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC1B2401987400E250D4 /* CBCentralManager+Combine.swift */; };
@@ -55,6 +56,7 @@
 /* Begin PBXFileReference section */
 		F718BAD72405F4EC000420AD /* NSSearchField+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSSearchField+Combine.swift"; sourceTree = "<group>"; };
 		F71D189C2082CC680047DD97 /* PeripheralsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralsViewController.swift; sourceTree = "<group>"; };
+		F734C1DD24F1E9C0009B5C4E /* Logger+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logger+Custom.swift"; sourceTree = "<group>"; };
 		F73B3FC623F8B55F00583D8F /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/Mac/RxRelay.framework; sourceTree = "<group>"; };
 		F73B3FC723F8B55F00583D8F /* RxAtomic.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxAtomic.framework; path = Carthage/Build/Mac/RxAtomic.framework; sourceTree = "<group>"; };
 		F73B3FC823F8B55F00583D8F /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/Mac/RxBlocking.framework; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				F77DBC1A2401984C00E250D4 /* Bluetooth */,
 				F77DBC2324019BCD00E250D4 /* CombineExtensions */,
 				F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */,
+				F734C1DD24F1E9C0009B5C4E /* Logger+Custom.swift */,
 				F7CD04242041BF0A00DDDCB3 /* Products */,
 				F7CD042A2041BF0A00DDDCB3 /* Assets.xcassets */,
 				F7CD042C2041BF0A00DDDCB3 /* Main.storyboard */,
@@ -269,6 +272,7 @@
 				F77DBC202401988800E250D4 /* Publisher+Extensions.swift in Sources */,
 				F71D189D2082CC680047DD97 /* PeripheralsViewController.swift in Sources */,
 				F77DBC222401988800E250D4 /* RepeatableIntervalTimer.swift in Sources */,
+				F734C1DE24F1E9C0009B5C4E /* Logger+Custom.swift in Sources */,
 				F77DBC1C2401987400E250D4 /* CBCentralManager+Combine.swift in Sources */,
 				F7CD04272041BF0A00DDDCB3 /* AppDelegate.swift in Sources */,
 				F76CD273209010BB006C2A36 /* ServicesViewController.swift in Sources */,

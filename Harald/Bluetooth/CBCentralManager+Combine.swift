@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 import CoreBluetooth
+import os.log
 
 public struct DiscoveryInfo {
     public typealias AdPacket = [String: Any]
@@ -97,10 +98,13 @@ private class CentralManagerProxy: NSObject {
 
 extension CentralManagerProxy: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        os_log("%s: state changed to %d", log: OSLog.bluetooth, type: .debug, "\(#function)", central.state.rawValue)
         _statePublisher.send(central.state)
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        os_log("%s: %@ found advertising with %@", log: OSLog.bluetooth, type: .debug, "\(#function)", peripheral, advertisementData)
+        
         let discoveryInfo = DiscoveryInfo(
             peripheral: peripheral,
             packet: advertisementData,
@@ -116,7 +120,13 @@ extension CentralManagerProxy: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        os_log("%s: connected to %@", log: .bluetooth, type: .debug, "\(#function)", peripheral)
+        
         guard let publisher = peripheralConnectionPublisher else { return }
         publisher.send(peripheral)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        os_log("%s: disconnected from %@", log: .bluetooth, type: .debug, "\(#function)", peripheral)
     }
 }
