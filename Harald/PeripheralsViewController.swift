@@ -109,7 +109,7 @@ extension PeripheralsViewController {
                 return RepeatableIntervalTimer(interval: 25.0)
                     .eraseToAnyPublisher()
             }
-            // begin scanning whenever to timer fires
+            // begin scanning whenever the timer fires
             .do(onNext: { [weak self] in
                 print("starting scan...")
                 self?.manager?.scanForPeripherals(withServices: nil)
@@ -135,7 +135,7 @@ extension PeripheralsViewController {
                 guard let objects = controller.arrangedObjects as? [AnyObject] else { return 0 }
                 return objects.count
             }
-            .map { discoveryDescriptor(with: $0) }
+            .map { $0.discoveryDescriptor }
             .sink { [weak self] (result) in
                 self?.statusTextField.stringValue = result
             }
@@ -152,22 +152,21 @@ extension PeripheralsViewController {
 
 private extension CBPeripheral {
     @objc var displayName: String {
-        guard let name = self.name else {
-            return "Unknown"
-        }
-        
-        return name.trimmingLowEnergyPrefix
+        guard let name = name else { return "Unknown" }
+        return name // .trimmingLowEnergyPrefix
     }
 }
 
-private func discoveryDescriptor(with count: Int) -> String {
-    switch count {
-    case 0:
-        return "No peripherals discovered"
-    case 1:
-        return "1 peripheral discovered"
-    default:
-        return "\(count) peripherals discovered"
+private extension Int {
+    var discoveryDescriptor: String {
+        switch self {
+        case 0:
+            return "No peripherals discovered"
+        case 1:
+            return "1 peripheral discovered"
+        default:
+            return "\(self) peripherals discovered"
+        }
     }
 }
 

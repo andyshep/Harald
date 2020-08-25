@@ -151,4 +151,12 @@ extension PeripheralProxy: CBPeripheralDelegate {
             _updatedCharacteristicValueSubject.send(.success(characteristic))
         }
     }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        // TODO: implement
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        _discoveredServicesSubject.send(invalidatedServices)
+    }
 }

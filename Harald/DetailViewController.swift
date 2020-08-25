@@ -34,16 +34,12 @@ class DetailViewController: NSViewController {
         outlineView.bind(.content, to: packetsController, withKeyPath: "arrangedObjects")
         
         self.representedObjectPublisher
-            .compactMap { object -> [Advertisement]? in
+            .compactMap { object -> [PacketNode]? in
                 guard let packet = object as? [String: Any] else { return nil }
                 return packet
                     .enumerated()
-                    .map { (_, element) -> Advertisement in
-                        return Advertisement(element: element)
-                    }
-            }
-            .map { (advertisements) in
-                return advertisements.map { PacketNode(name: $0.name, value: $0.value) }
+                    .map { Advertisement(element: $0.1) }
+                    .map { PacketNode(name: $0.name, value: $0.value) }
             }
             .sink { [weak self] (packets) in
                 self?.willChangeValue(for: \.packets)

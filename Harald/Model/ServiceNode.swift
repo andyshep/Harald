@@ -38,27 +38,23 @@ import CoreBluetooth
 
 @objc class CharacteristicNode: DataNode {
     @objc let name: String
-    private var _value: String? = ""
+    @objc var value: String = ""
     
-    @objc var value: String {
-        return _value ?? ""
-    }
+    let characteristic: CBCharacteristic
     
-    @objc let characteristic: CBCharacteristic
-    
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables = Set<AnyCancellable>()
     
     init(characteristic: CBCharacteristic) {
         self.characteristic = characteristic
         self.name = characteristic.uuid.description
+        
         super.init()
         
         bind(to: characteristic)
     }
     
     deinit {
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
+        cancellables.cancel()
     }
     
     @objc var isLeaf: Bool {
@@ -67,7 +63,7 @@ import CoreBluetooth
     
     override func isEqual(_ object: Any?) -> Bool {
         guard let node = object as? CharacteristicNode else { return false }
-        return node.characteristic.isEqual(to: self.characteristic)
+        return node.characteristic.isEqual(to: characteristic)
     }
     
     private func bind(to characteristic: CBCharacteristic) {
@@ -81,7 +77,7 @@ import CoreBluetooth
                 case .success(let data):
                     guard let data = data else { return "Empty" }
                     guard let string = String(data: data, encoding: .utf8) else {
-                        return data.hexEncodedString().uppercased()
+                        return data.hexEncodedString(options: [.upperCase])
                     }
                     return string
                 case .failure(let error):
@@ -90,7 +86,7 @@ import CoreBluetooth
             }
             .sink { [weak self] (value) in
                 self?.willChangeValue(for: \.value)
-                self?._value = value
+                self?.value = value
                 self?.didChangeValue(for: \.value)
             }
             .store(in: &cancellables)

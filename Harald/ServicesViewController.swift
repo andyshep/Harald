@@ -77,54 +77,38 @@ class ServicesViewController: NSViewController {
     
     override var representedObject: Any? {
         didSet {
+            // make sure we're given a CBPeripheral
+            guard let peripherial = representedObject as? CBPeripheral else { return }
+            
             self.willChangeValue(for: \.services)
             self.services = []
             self.didChangeValue(for: \.services)
             
-            guard let peripherial = representedObject as? CBPeripheral else {
-                return
-            }
-            
-            if let oldPeripheral = oldValue as? CBPeripheral {
-                // close any previous connections
-                manager?.cancelPeripheralConnection(oldPeripheral)
-                
-                if peripherial != oldPeripheral {
-                    // update
-                    bind(to: peripherial)
-                } else {
-                    print("not updating")
-                }
-            } else {
-                // update
+            // bind to peripherial upon exit
+            defer {
+                peripheralCancellables.cancel()
                 bind(to: peripherial)
             }
+            
+            // cancel
+            guard let oldPeripheral = oldValue as? CBPeripheral else { return }
+            manager?.cancelPeripheralConnection(oldPeripheral)
         }
     }
 }
 
 private extension ServicesViewController {
     private func reloadServiceNodes(using services: [CBService]) {
-        let nodes = services.compactMap { ServiceNode(service: $0) }
-        
         self.willChangeValue(for: \.services)
-        self.services = nodes
+        self.services = services.compactMap { ServiceNode(service: $0) }
         self.didChangeValue(for: \.services)
     }
     
-    private func updateCharacteristics(_ characteristics: [CBCharacteristic], for service: CBService) {
-        // create the characteristic nodes
-        let characteristics = characteristics.compactMap { characteristic -> CharacteristicNode in
-            let node = CharacteristicNode(characteristic: characteristic)
-            return node
-        }
-        
-        let node = services.first { (node) -> Bool in
-            guard let current = node as? ServiceNode else { return false }
-            return current.service == service
-        }
-        
+    private func updateCharacteristicNodes(_ characteristics: [CharacteristicNode], for service: CBService) {
+        // find service to update, make sure characteristics don't match
+        let node = services.first { ($0 as? ServiceNode)?.service == service }
         guard let serviceNode = node as? ServiceNode else { return }
+        guard serviceNode.characteristics != characteristics else { return }
         
         serviceNode.willChangeValue(for: \ServiceNode.characteristics)
         serviceNode.characteristics = characteristics
@@ -132,35 +116,42 @@ private extension ServicesViewController {
     }
     
     private func bind(to peripheral: CBPeripheral) {
-        peripheralCancellables.forEach { $0.cancel() }
-        peripheralCancellables = []
-        
         manager?.connect(to: peripheral)
             // once connected, ask the peripheral to discover *and* publish services
             .flatMap { peripheral -> AnyPublisher<[CBService], Error> in
                 return peripheral.discoveredServicesPublisher
             }
+            .prefix(1)
             // set the initial response containing services without charactertics
             .do(onNext: { [weak self] (services) in
                 self?.reloadServiceNodes(using: services)
             })
             // discover characteristics for each service by returning
             // an observable tuple stream of services and characteristics
-            .flatMap { (services) -> AnyPublisher<(CBService, [CBCharacteristic]), Error> in
-                let characteristics = services.compactMap { $0.discoveredCharacteristics }
-                return Publishers.MergeMany(characteristics).eraseToAnyPublisher()
+            .flatMapLatest { (services) -> AnyPublisher<(CBService, [CBCharacteristic]), Error> in
+                let publishers = services.compactMap { $0.discoveredCharacteristics }
+                return Publishers.MergeMany(publishers)
+                    .eraseToAnyPublisher()
             }
-            // update the service nodes with the characteristics (after they are discovered)
-            .do(onNext: { [weak self] (service, characteristics) in
-                guard let this = self else { return }
-                
-                // initiate a call to read each charactertistics value
-                // this will come back later through another Rx pipeline
-                characteristics.forEach { peripheral.readValue(for: $0) }
-
-                this.updateCharacteristics(characteristics, for: service)
-                this.outlineView.expandItem(nil, expandChildren: true)
-            })
-            .subscribe(andStoreIn: &cancellables)
+            .sink(
+                receiveCompletion: { _ in () },
+                receiveValue: { [weak self] (service, characteristics) in
+                    let nodes = characteristics
+                        .compactMap { CharacteristicNode(characteristic: $0) }
+                    
+                    // update the service nodes with the characteristics (after they are discovered)
+                    self?.updateCharacteristicNodes(nodes, for: service)
+                    
+                    self?.outlineView.expandItem(nil, expandChildren: true)
+    
+                    // initiate a call to read each charactertistics value and descriptors
+                    // these will come back later through another Rx pipeline
+                    nodes.forEach { node in
+                        peripheral.discoverDescriptors(for: node.characteristic)
+                        peripheral.readValue(for: node.characteristic)
+                    }
+                }
+            )
+            .store(in: &cancellables)
     }
 }

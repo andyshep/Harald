@@ -17,6 +17,7 @@ public struct DiscoveryInfo {
     let peripheral: CBPeripheral
     let packet: AdPacket
     let rssi: Double
+    let timestamp: Date
 }
 
 extension CBCentralManager {
@@ -88,7 +89,7 @@ private class CentralManagerProxy: NSObject {
         let publisher = PassthroughSubject<CBPeripheral, Error>()
         peripheralConnectionPublisher = publisher
         
-        manager.connect(peripheral, options: nil)
+        manager.connect(peripheral, options: [:])
         
         return publisher.eraseToAnyPublisher()
     }
@@ -108,7 +109,8 @@ extension CentralManagerProxy: CBCentralManagerDelegate {
         let discoveryInfo = DiscoveryInfo(
             peripheral: peripheral,
             packet: advertisementData,
-            rssi: RSSI.doubleValue
+            rssi: RSSI.doubleValue,
+            timestamp: Date()
         )
         _peripheralPublisher.send(.success(discoveryInfo))
     }
