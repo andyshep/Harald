@@ -39,4 +39,26 @@ extension Publisher {
         )
         .store(in: &cancellables)
     }
+    
+    func subscribe(andStoreIn cancellables: inout Set<AnyCancellable>) {
+        sink(
+            receiveCompletion: { _ in },
+            receiveValue: { _ in }
+        )
+        .store(in: &cancellables)
+    }
+}
+
+extension Array where Element: AnyCancellable {
+    mutating func cancel() {
+        forEach { $0.cancel() }
+        removeAll()
+    }
+}
+
+extension Set where Element: AnyCancellable {
+    mutating func cancel() {
+        forEach { $0.cancel() }
+        removeAll()
+    }
 }

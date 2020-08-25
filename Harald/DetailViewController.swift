@@ -12,7 +12,7 @@ import Combine
 
 class DetailViewController: NSViewController {
     
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables = Set<AnyCancellable>()
     
     @IBOutlet private weak var outlineView: NSOutlineView!
     

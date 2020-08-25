@@ -13,7 +13,7 @@ import Combine
 
 class WindowController: NSWindowController {
     
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables = Set<AnyCancellable>()
     
     private let centralManager = CBCentralManager()
     

@@ -17,8 +17,8 @@ class ServicesViewController: NSViewController {
         case peripheralProxyIsNil
     }
     
-    private var cancellables: [AnyCancellable] = []
-    private var peripheralCancellables: [AnyCancellable] = []
+    private var cancellables = Set<AnyCancellable>()
+    private var peripheralCancellables = Set<AnyCancellable>()
     
     // MARK: Inputs
     

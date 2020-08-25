@@ -12,7 +12,7 @@ import Combine
 
 class PeripheralsViewController: NSViewController {
     
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables = Set<AnyCancellable>()
     
     public var reloadEvent = PassthroughSubject<Void, Never>()
     
