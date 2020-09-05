@@ -11,7 +11,7 @@ import CoreBluetooth
 
 typealias Packet = [String: Any]
 
-@objc class DiscoveredPeripheral: NSObject {
+@objc final class DiscoveredPeripheral: NSObject {
     @objc let peripheral: CBPeripheral
     @objc let packet: Packet
     @objc let rssi: Double

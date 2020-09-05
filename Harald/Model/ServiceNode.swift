@@ -10,9 +10,9 @@ import Foundation
 import Combine
 import CoreBluetooth
 
-@objc class DataNode: NSObject { }
+@objc open class DataNode: NSObject { }
 
-@objc class ServiceNode: DataNode {
+@objc final class ServiceNode: DataNode {
     @objc let name: String
     @objc let value: String = ""
     @objc var characteristics: [CharacteristicNode]
@@ -36,7 +36,7 @@ import CoreBluetooth
     }
 }
 
-@objc class CharacteristicNode: DataNode {
+@objc final class CharacteristicNode: DataNode {
     @objc let name: String
     @objc var value: String = ""
     
@@ -93,7 +93,7 @@ import CoreBluetooth
     }
 }
 
-@objc class PacketNode: DataNode {
+@objc final class PacketNode: DataNode {
     @objc let name: String
     @objc let value: String
     @objc let children: [PacketNode]

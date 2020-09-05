@@ -37,7 +37,7 @@ extension NSOutlineView {
 }
 
 private var _outlineViewProxyKey: UInt8 = 0
-private class OutlineViewProxy: NSObject {
+private final class OutlineViewProxy: NSObject {
     
     var itemWillExpandPublisher: AnyPublisher<Int, Never> {
         return _itemWillExpandPublisher.eraseToAnyPublisher()

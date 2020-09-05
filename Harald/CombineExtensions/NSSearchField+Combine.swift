@@ -31,7 +31,7 @@ extension NSSearchField {
 }
 
 private var _searchFieldProxyKey: UInt8 = 0
-private class SearchFieldProxy: NSObject {
+private final class SearchFieldProxy: NSObject {
     
     var stringValuePublisher: AnyPublisher<String, Never> {
         return _stringValuePublisher.eraseToAnyPublisher()

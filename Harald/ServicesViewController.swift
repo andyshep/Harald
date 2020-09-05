@@ -11,7 +11,7 @@ import AppKit
 import CoreBluetooth
 import Combine
 
-class ServicesViewController: NSViewController {
+final class ServicesViewController: NSViewController {
     
     private enum GeneralError: Error {
         case peripheralProxyIsNil

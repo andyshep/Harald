@@ -56,7 +56,7 @@ extension CBCentralManager {
 }
 
 private var _centralManagerProxyKey: UInt8 = 0
-private class CentralManagerProxy: NSObject {
+private final class CentralManagerProxy: NSObject {
     
     var statePublisher: AnyPublisher<CBManagerState, Never> {
         return _statePublisher.eraseToAnyPublisher()

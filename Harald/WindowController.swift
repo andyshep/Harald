@@ -11,7 +11,7 @@ import Cocoa
 import CoreBluetooth
 import Combine
 
-class WindowController: NSWindowController {
+final class WindowController: NSWindowController {
     
     private var cancellables = Set<AnyCancellable>()
     

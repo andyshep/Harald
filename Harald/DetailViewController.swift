@@ -10,7 +10,7 @@ import Cocoa
 import CoreBluetooth
 import Combine
 
-class DetailViewController: NSViewController {
+final class DetailViewController: NSViewController {
     
     private var cancellables = Set<AnyCancellable>()
     

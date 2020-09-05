@@ -91,7 +91,7 @@ extension CBCharacteristic {
 }
 
 private var _peripheralProxyKey: UInt8 = 0
-private class PeripheralProxy: NSObject {
+private final class PeripheralProxy: NSObject {
     
     var discoveredServicesPublisher: AnyPublisher<[CBService], Error> {
         return _discoveredServicesSubject.eraseToAnyPublisher()

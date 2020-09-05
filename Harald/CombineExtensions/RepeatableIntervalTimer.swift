@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-public class RepeatableIntervalTimer {
+public final class RepeatableIntervalTimer {
     private let startDate = Date()
     private let interval: TimeInterval
     private let timerSubject: PassthroughSubject<TimeInterval, Never>

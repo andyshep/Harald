@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-public class SingleIntervalTimer {
+public final class SingleIntervalTimer {
     private let startDate = Date()
     private let interval: TimeInterval
     private let timerSubject: PassthroughSubject<TimeInterval, Never>
