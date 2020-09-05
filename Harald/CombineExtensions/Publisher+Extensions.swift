@@ -29,6 +29,17 @@ extension Publisher {
     func flatMapLatest<T: Publisher>(_ transform: @escaping (Self.Output) -> T) -> Publishers.SwitchToLatest<T, Publishers.Map<Self, T>> where T.Failure == Self.Failure {
         map(transform).switchToLatest()
     }
+    
+    func filterNils<T: Publisher>() -> Publishers.CompactMap<Self, T> where Output == T? {
+        return compactMap { value -> T? in
+            guard let value = value else { return nil }
+            return value
+        }
+    }
+    
+    func toVoid() -> Publishers.Map<Self, Void> {
+        return map { _ in () }
+    }
 }
 
 extension Publisher {
