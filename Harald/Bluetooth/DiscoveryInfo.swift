@@ -50,14 +50,34 @@ extension Array where Element == DiscoveryInfo {
             remove(at: index)
             insert(updated, at: index)
         }
+        
     }
     
-    mutating func removeDiscoveriesPast(interval: TimeInterval = 45.0) {
+    func refreshing(with discovery: DiscoveryInfo) -> [DiscoveryInfo] {
+        guard count >= 0 else { return [discovery] }
+        
+        var existing = self
+        if let index = existing.firstIndex(where: { $0.peripheral == discovery.peripheral }) {
+            let updated = DiscoveryInfo(
+                self[index],
+                rssi: discovery.rssi,
+                packet: discovery.packet,
+                timestamp: Date()
+            )
+            
+            existing.remove(at: index)
+            existing.insert(updated, at: index)
+        } else {
+            existing.append(discovery)
+        }
+        
+        return existing
+    }
+    
+    func filterDiscoveries(past interval: TimeInterval = 45.0) -> [DiscoveryInfo] {
         let now = Date()
-        for (index, element) in enumerated() {
-            if element.timestamp.addingTimeInterval(interval) < now {
-                remove(at: index)
-            }
+        return filter { (info) -> Bool in
+            return info.timestamp.addingTimeInterval(interval) >= now
         }
     }
 }

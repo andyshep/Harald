@@ -13,11 +13,8 @@ import OSLog
 
 extension CBPeripheral {
     
-    /// Publisher that emits a collection of  `CBService` objects or an `Error`.
-    public typealias ServicesPublisher = AnyPublisher<[CBService], Error>
-    
     /// Emits with the discovered services belonging to the `CBPeripheral`.
-    public var discoveredServicesPublisher: ServicesPublisher {
+    public var discoveredServicesPublisher: AnyPublisher<[CBService], Error> {
         let publisher = proxy.discoveredServicesPublisher
         discoverServices(nil)
         return publisher
@@ -68,17 +65,10 @@ extension CBCharacteristic {
     var valuePublisher: ValuePublisher {
         let publisher = service.peripheral.proxy
             .updatedCharacteristicValuePublisher
-            .filter { result -> Bool in
+            .compactMap { (result) -> Result<Data?, Error>? in
                 switch result {
                 case .success(let characteristic):
-                    return self.uuid == characteristic.uuid
-                case .failure:
-                    return true
-                }
-            }
-            .map { result -> Result<Data?, Error> in
-                switch result {
-                case .success(let characteristic):
+                    guard self.uuid == characteristic.uuid else { return nil }
                     return .success(characteristic.value)
                 case .failure(let error):
                     return .failure(error)
@@ -132,16 +122,23 @@ private final class PeripheralProxy: NSObject {
 
 extension PeripheralProxy: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        let services = peripheral.services ?? []
+        os_log("%s: %@ found services %@", log: OSLog.bluetooth, type: .debug, "\(#function)", peripheral, services)
+        
         _discoveredServicesSubject.send(peripheral.services ?? [])
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         let characteristics = service.characteristics ?? []
+        os_log("%s: %@ found characteristics %@ for service %@", log: OSLog.bluetooth, type: .info, "\(#function)", peripheral, characteristics, service)
+        
         _discoveredCharacteristicsSubject.send((service, characteristics))
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
         let descriptors = characteristic.descriptors ?? []
+        os_log("%s: %@ found descriptors %@ for characteristic %@", log: OSLog.bluetooth, type: .debug, "\(#function)", peripheral, descriptors, characteristic)
+        
         _discoveredCharacteristicDescriptorsSubject.send((characteristic, descriptors))
     }
     

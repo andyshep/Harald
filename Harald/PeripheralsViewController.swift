@@ -80,24 +80,14 @@ final class PeripheralsViewController: NSViewController {
 
 extension PeripheralsViewController {
     func bind(to manager: CBCentralManager) {
-        manager.peripheralPublisher
-            .compactMap { (result) -> DiscoveredPeripheral? in
-                switch result {
-                case .success(let info):
-                    return DiscoveredPeripheral(discovery: info)
-                case .failure:
-                    return nil
-                }
-            }
-            .sink { [weak self] discovery in
+        manager.peripheralCachePublisher
+            .map { $0.map { DiscoveredPeripheral(discovery: $0) } }
+            .sink { [weak self] (discovery) in
                 guard let this = self else { return }
-                guard let _ = discovery.peripheral.name else { return }
-
-                if !this.discovered.contains(discovery) {
-                    this.willChangeValue(for: \.discovered)
-                    this.discovered.append(discovery)
-                    this.didChangeValue(for: \.discovered)
-                }
+                
+                this.willChangeValue(for: \.discovered)
+                this.discovered = discovery
+                this.didChangeValue(for: \.discovered)
             }
             .store(in: &cancellables)
         
@@ -112,8 +102,16 @@ extension PeripheralsViewController {
             }
             // begin scanning whenever the timer fires
             .do(onNext: { [weak self] in
-                print("starting scan...")
-                self?.manager?.scanForPeripherals(withServices: nil)
+                os_log("%s: starting scan...", log: OSLog.bluetooth, type: .debug, "\(#function)")
+                self?.manager?.scanForPeripherals(
+                    withServices: nil,
+                    options: [
+                        CBCentralManagerScanOptionAllowDuplicatesKey: false,
+                        CBConnectPeripheralOptionNotifyOnConnectionKey: true,
+//                        CBConnectPeripheralOptionNotifyOnDisconnectionKey: false,
+//                        CBConnectPeripheralOptionNotifyOnNotificationKey: false
+                    ]
+                )
             })
             // each time we start scanning, start another one-time 10 second timer
             .flatMap { _ -> AnyPublisher<Double, Never> in
@@ -122,7 +120,7 @@ extension PeripheralsViewController {
             }
             // stop scanning once the second timer fires
             .do(onNext: { [weak self] in
-                print("stopping scan...")
+                os_log("%s: stopping scan.", log: OSLog.bluetooth, type: .debug, "\(#function)")
                 self?.manager?.stopScan()
             })
             .subscribe(andStoreIn: &cancellables)

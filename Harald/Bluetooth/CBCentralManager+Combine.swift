@@ -13,24 +13,25 @@ import OSLog
 
 extension CBCentralManager {
     
-    public typealias StatePublisher = AnyPublisher<CBManagerState, Never>
-    public typealias PeripheralPublisher = AnyPublisher<CBPeripheral, Error>
-    public typealias DiscoveryInfoPublisher = AnyPublisher<Result<DiscoveryInfo, Error>, Never>
-    
     /// Emits with state changes from the `CBCentalManager`. Initially set the `.unknown`
-    public var statePublisher: StatePublisher {
+    public var statePublisher: AnyPublisher<CBManagerState, Never> {
         return proxy.statePublisher
     }
     
     /// Emits with discovered peripherals from the `CBCentralManager`. The manager must be scanning before
     /// peripherals will emit.
-    public var peripheralPublisher: DiscoveryInfoPublisher {
+    public var peripheralPublisher: AnyPublisher<Result<DiscoveryInfo, Error>, Never> {
         return proxy.peripheralPublisher
+    }
+    
+    /// Emits with cached discovered peripherals from the `CBCentralManager`.
+    public var peripheralCachePublisher: AnyPublisher<[DiscoveryInfo], Never> {
+        return proxy.peripheralCachePublisher
     }
     
     /// Emits with information about the connected peripheral. Private `PassthroughSubject` used to handle
     /// delegate callbacks from `centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral)`
-    public func connect(to peripheral: CBPeripheral) -> PeripheralPublisher {
+    public func connect(to peripheral: CBPeripheral) -> AnyPublisher<CBPeripheral, Error> {
         return proxy.connect(to: peripheral)
     }
     
@@ -49,31 +50,68 @@ extension CBCentralManager {
 private var _centralManagerProxyKey: UInt8 = 0
 private final class CentralManagerProxy: NSObject {
     
+    /// Internally handles state changes from `CBManager`
     var statePublisher: AnyPublisher<CBManagerState, Never> {
         return _statePublisher.eraseToAnyPublisher()
     }
     private let _statePublisher = CurrentValueSubject<CBManagerState, Never>(CBManagerState.unknown)
     
+    /// Internally handles discovery changes from `CBManager`
     var peripheralPublisher: AnyPublisher<Result<DiscoveryInfo, Error>, Never> {
         return _peripheralPublisher.eraseToAnyPublisher()
     }
     private let _peripheralPublisher = PassthroughSubject<Result<DiscoveryInfo, Error>, Never>()
     
+    /// Stores the publisher used to track active connection request
     private var peripheralConnectionPublisher: PassthroughSubject<CBPeripheral, Error>?
     
+    /// Internally handles and caches discovery changes from `CBManager`
+    var peripheralCachePublisher: AnyPublisher<[DiscoveryInfo], Never> {
+        return _peripheralCachePublisher.eraseToAnyPublisher()
+    }
+    private let _peripheralCachePublisher = CurrentValueSubject<[DiscoveryInfo], Never>.init([])
+    
+    /// The internal `CBManager` proxy object
     private let manager: CBCentralManager
+    
+    private var cancellables = Set<AnyCancellable>()
     
     init(manager: CBCentralManager) {
         self.manager = manager
         super.init()
         
         manager.delegate = self
+        
+        peripheralPublisher
+            .compactMap { result -> DiscoveryInfo? in
+                switch result {
+                case .success(let info):
+                    guard let _ = info.peripheral.name else { return nil }
+                    return info
+                case .failure(_):
+                    return nil
+                }
+            }
+            .combineLatest(peripheralCachePublisher)
+            .map { (discovery, previousDiscoveries) -> [DiscoveryInfo] in
+                return previousDiscoveries
+                    .refreshing(with: discovery)
+                    .filterDiscoveries(past: 70.0)
+            }
+            .sink { (discoveries) in
+                self._peripheralCachePublisher.send(discoveries)
+            }
+            .store(in: &cancellables)
     }
     
     deinit {
         manager.delegate = nil
+        cancellables.cancel()
     }
     
+    /// Opens a connection to a `CBPeripheral`
+    /// - Parameter peripheral: The `CBPeripheral ` instance to open a connection to
+    /// - Returns: A publisher to emits when a connection as been opened, or errors
     func connect(to peripheral: CBPeripheral) -> AnyPublisher<CBPeripheral, Error> {
         peripheralConnectionPublisher?.send(completion: .finished)
         
@@ -99,7 +137,7 @@ extension CentralManagerProxy: CBCentralManagerDelegate {
         
         let discoveryInfo = DiscoveryInfo(
             peripheral: peripheral,
-            packet: advertisementData,
+            packet: advertisementData as! [String: AnyHashable],
             rssi: RSSI.doubleValue,
             timestamp: Date()
         )

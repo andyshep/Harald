@@ -9,14 +9,14 @@
 import Foundation
 import CoreBluetooth
 
-typealias Packet = [String: Any]
+typealias Packet = [String: AnyHashable]
 
 @objc final class DiscoveredPeripheral: NSObject {
     @objc let peripheral: CBPeripheral
     @objc let packet: Packet
     @objc let rssi: Double
     
-    init(peripheral: CBPeripheral, packet: [String: Any], rssi: Double) {
+    init(peripheral: CBPeripheral, packet: [String: AnyHashable], rssi: Double) {
         self.peripheral = peripheral
         self.packet = packet
         self.rssi = rssi
@@ -32,6 +32,12 @@ typealias Packet = [String: Any]
     
     override func isEqual(_ object: Any?) -> Bool {
         guard let discovered = object as? DiscoveredPeripheral else { return false }
-        return discovered.peripheral.isEqual(to: self.peripheral)
+        return
+            discovered.peripheral.isEqual(to: peripheral) &&
+            discovered.packet == packet
     }
+}
+
+public func ==<K, L: Hashable, R: Hashable>(lhs: [K: L], rhs: [K: R] ) -> Bool {
+   (lhs as NSDictionary).isEqual(to: rhs)
 }
