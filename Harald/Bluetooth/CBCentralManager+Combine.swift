@@ -9,16 +9,7 @@
 import Foundation
 import Combine
 import CoreBluetooth
-import os.log
-
-public struct DiscoveryInfo {
-    public typealias AdPacket = [String: Any]
-    
-    let peripheral: CBPeripheral
-    let packet: AdPacket
-    let rssi: Double
-    let timestamp: Date
-}
+import OSLog
 
 extension CBCentralManager {
     

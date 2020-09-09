@@ -22,6 +22,7 @@
 		F77DBC2B2401A82E00E250D4 /* NSButton+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2A2401A82E00E250D4 /* NSButton+Combine.swift */; };
 		F77DBC2D2401AB7B00E250D4 /* NSOutlineView+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2C2401AB7B00E250D4 /* NSOutlineView+Combine.swift */; };
 		F77DBC2F2401B2A400E250D4 /* CBPeripheral+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77DBC2E2401B2A400E250D4 /* CBPeripheral+Combine.swift */; };
+		F78DD7FF2503C9740046413E /* DiscoveryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78DD7FE2503C9740046413E /* DiscoveryInfo.swift */; };
 		F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79FAEB520FAC6A20066089F /* DetailViewController.swift */; };
 		F7B2AB4B20FC0C8E00A8EDD1 /* Data+HexEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */; };
 		F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BB97BC21035CCD00C0CBB3 /* DiscoveredPeripheral.swift */; };
@@ -72,6 +73,7 @@
 		F77DBC2A2401A82E00E250D4 /* NSButton+Combine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSButton+Combine.swift"; sourceTree = "<group>"; };
 		F77DBC2C2401AB7B00E250D4 /* NSOutlineView+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+Combine.swift"; sourceTree = "<group>"; };
 		F77DBC2E2401B2A400E250D4 /* CBPeripheral+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBPeripheral+Combine.swift"; sourceTree = "<group>"; };
+		F78DD7FE2503C9740046413E /* DiscoveryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryInfo.swift; sourceTree = "<group>"; };
 		F79FAEB520FAC6A20066089F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		F7B2AB4A20FC0C8E00A8EDD1 /* Data+HexEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+HexEncoding.swift"; sourceTree = "<group>"; };
 		F7BB97BC21035CCD00C0CBB3 /* DiscoveredPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredPeripheral.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			children = (
 				F77DBC1B2401987400E250D4 /* CBCentralManager+Combine.swift */,
 				F77DBC2E2401B2A400E250D4 /* CBPeripheral+Combine.swift */,
+				F78DD7FE2503C9740046413E /* DiscoveryInfo.swift */,
 			);
 			path = Bluetooth;
 			sourceTree = "<group>";
@@ -207,7 +210,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Andrew Shepard";
 				TargetAttributes = {
 					F7CD04222041BF0A00DDDCB3 = {
@@ -262,6 +265,7 @@
 				F79FAEB620FAC6A20066089F /* DetailViewController.swift in Sources */,
 				F7BB97BD21035CCD00C0CBB3 /* DiscoveredPeripheral.swift in Sources */,
 				F718BAD82405F4EC000420AD /* NSSearchField+Combine.swift in Sources */,
+				F78DD7FF2503C9740046413E /* DiscoveryInfo.swift in Sources */,
 				F7CD04B52043068600DDDCB3 /* WindowController.swift in Sources */,
 				F77DBC2624019C3700E250D4 /* NSViewController+Combine.swift in Sources */,
 				F77DBC2D2401AB7B00E250D4 /* NSOutlineView+Combine.swift in Sources */,
@@ -319,6 +323,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -379,6 +384,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
