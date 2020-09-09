@@ -9,6 +9,7 @@
 import Cocoa
 import CoreBluetooth
 import Combine
+import OSLog
 
 final class PeripheralsViewController: NSViewController {
     

@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 import CoreBluetooth
+import OSLog
 
 extension CBPeripheral {
     
